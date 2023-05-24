@@ -1,23 +1,49 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import logo from "../../assets/images/sample_logo_3.png";
 
 const Navbar = () => {
   return (
-    <nav>
-      <ul>
+    <nav className="flex justify-around items-center py-4 px-6 font-bold navbar">
+      <div>
+        <Link to="/" className="text-2xl text-gray-800">
+          <img src={logo} alt="Logo"></img>
+        </Link>
+      </div>
+      <ul className="flex gap-4">
         <li>
-          <Link to="/">Main</Link>
+          <Link
+            to="/bookmark"
+            className="text-gray-600 hover:text-gray-800 transition-colors duration-300 font-bold text-2xl"
+          >
+            옷장
+          </Link>
         </li>
         <li>
-          <Link to="/mypage">My Page</Link>
+          <Link
+            to="/mypage"
+            className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-2xl"
+          >
+            마이페이지
+          </Link>
         </li>
         <li>
-          <Link to="/bookmark">Bookmark</Link>
-        </li>
-        <li>
-          <Link to="/login">Login</Link>
+          <Link
+            to="/login"
+            className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-2xl"
+          >
+            로그인
+          </Link>
         </li>
       </ul>
+      <ul className="flex gap-4">
+        {" "}
+        <li className="weatherBox">{/* 날씨 컴포넌트  */} 날씨 </li>
+      </ul>
+      <style jsx>{`
+        .navbar {
+        }
+      `}</style>
     </nav>
   );
 };

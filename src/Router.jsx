@@ -4,16 +4,17 @@ import Navbar from "./defaultlayout/header/Navbar";
 import Bookmark from "./pages/bookmark/Bookmark";
 import Mypage from "./pages/mypage/Mypage";
 import Login from "./pages/login/Login";
+import Main from "./pages/main/Main";
 
 const App = () => {
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route exact path="/" />
-        <Route path="/bookmark" component={Bookmark} />
-        <Route path="/mypage" component={Mypage} />
-        <Route path="/login" component={Login} />
+        <Route exact path="/" element={<Main />} />
+        <Route path="/bookmark" element={<Bookmark />} />
+        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

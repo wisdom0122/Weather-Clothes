@@ -2,7 +2,11 @@ import "./styles/tailwind.css";
 import Router from "./Router";
 
 function App() {
-  return <Router />;
+  return (
+    <div>
+      <Router />
+    </div>
+  );
 }
 
 export default App;
