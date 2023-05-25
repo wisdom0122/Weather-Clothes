@@ -1,5 +1,12 @@
+import "./styles/tailwind.css";
+import Routers from "./Router/Routers";
+
 function App() {
-  return <div>안녕dkssud</div>;
+  return (
+    <div>
+      <Routers />
+    </div>
+  );
 }
 
 export default App;
