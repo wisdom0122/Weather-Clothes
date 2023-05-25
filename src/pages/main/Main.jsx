@@ -1,18 +1,13 @@
 import React from "react";
+import MainHeader from "./MainHeader";
+import MainBody from "./MainBody";
 
 const Main = () => {
   return (
     <div>
-      <div className="MainMainMain">ddaaa</div>
-      <style jsx>{`
-        .MainMainMain {
-          width: 500px;
-          height: 500px;
-          border: 1px solid black;
-          background-color: black;
-          z-index: 20;
-        }
-      `}</style>
+      <MainHeader />
+      <MainBody />
+      <style jsx>{``}</style>
     </div>
   );
 };

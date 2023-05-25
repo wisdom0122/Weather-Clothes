@@ -1,5 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Switch,
+} from "react-router-dom";
+
 import Navbar from "./defaultlayout/header/Navbar";
 import Bookmark from "./pages/bookmark/Bookmark";
 import Mypage from "./pages/mypage/Mypage";
@@ -9,12 +15,13 @@ import Main from "./pages/main/Main";
 const App = () => {
   return (
     <Router>
-      <Navbar />
       <Routes>
-        <Route exact path="/" element={<Main />} />
+        {/* <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navbar />}> */}
+        <Route index element={<Main />} />
         <Route path="/bookmark" element={<Bookmark />} />
         <Route path="/mypage" element={<Mypage />} />
-        <Route path="/login" element={<Login />} />
+        {/* </Route> */}
       </Routes>
     </Router>
   );
