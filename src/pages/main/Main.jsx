@@ -4,10 +4,13 @@ import MainBody from "./MainBody";
 
 const Main = () => {
   return (
-    <div>
+    <div className="mainSize">
       <MainHeader />
       <MainBody />
-      <style jsx>{``}</style>
+      <style jsx>{`
+        .mainSize {
+        }
+      `}</style>
     </div>
   );
 };

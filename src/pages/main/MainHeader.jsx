@@ -27,9 +27,11 @@ const MainHeader = () => {
           flex-direction: row;
           gap: 4rem;
           padding: 1rem;
-          width: 80vw;
+          width: 75vw;
           border-radius: 10px;
           justify-content: center;
+          height: 142px;
+          line-height: 48px;
         }
         .mainHeader div {
           display: flex;
@@ -41,7 +43,8 @@ const MainHeader = () => {
         }
         .mainHeader p {
           color: white;
-          font-size: 1.3rem;
+          font-family: "Noto Sans";
+          font-size: 1.6rem;
           font-weight: 700;
         }
       `}</style>
