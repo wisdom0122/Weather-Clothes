@@ -1,10 +1,10 @@
 import "./styles/tailwind.css";
-import Router from "./Router";
+import Routers from "./Router/Routers";
 
 function App() {
   return (
     <div>
-      <Router />
+      <Routers />
     </div>
   );
 }
