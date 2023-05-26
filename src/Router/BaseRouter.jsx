@@ -1,6 +1,6 @@
 import React from "react";
-import { Route,Routes } from "react-router-dom";
-import Bookmark from "../pages/bookmark/Bookmark"
+import { Route, Routes } from "react-router-dom";
+import Bookmark from "../pages/bookmark/Bookmark";
 import Main from "../pages/main/Main";
 import Mypage from "../pages/mypage/Mypage";
 import Navbar from "../defaultlayout/header/Navbar";
