@@ -1,0 +1,111 @@
+.loginForm{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: 0 auto;
+}
+
+.logo{
+    margin: 55px auto 112.84px auto;    /*상 우 하 좌*/
+    width: 230px;
+    height: 80.16px;
+}
+
+.formInput {
+    border: 1px solid #D1D1D1;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 30px;
+    width:400px;
+    height:55px;
+}
+
+.formInput::placeholder {
+    color: #D1D1D1;
+    font-size: 22px;
+    padding: 12px 0 12px 17px;
+}
+
+#formPw {
+    margin-top: 14px;
+}
+
+.spanBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 62px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #3F8DED;  
+}
+
+#registerSpan{
+    margin-left: 19px;
+}
+
+.confirmButton {
+    position: relative;
+    width: 93px;
+    height: 40px;
+    left: 300px;
+    top: -336px;
+    background: #3F8DED;
+    border-radius: 20px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+#text{
+    margin-top: 11px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #3F8DED;
+}
+
+.loginButton {
+    margin: 8px auto 31px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 179px;
+    height: 55px;
+    background: #3F8DED;
+    border-radius: 20px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    color: #FFFFFF;
+}
+
+.socialLogin {
+    border: 1px solid #D1D1D1;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    line-height: 30px;
+    width:400px;
+    height:55px;
+}
