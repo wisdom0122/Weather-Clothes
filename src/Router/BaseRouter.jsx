@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> feat/RegisterPage
 import React from "react";
 import { Route,Routes } from "react-router-dom";
 import Bookmark from "../pages/bookmark/Bookmark"
