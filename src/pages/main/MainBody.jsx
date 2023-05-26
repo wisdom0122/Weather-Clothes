@@ -3,7 +3,8 @@ import axios from "axios";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import sche from "../../assets/images/sche.png";
+import Sche1 from "./Sche1";
+import Sche2 from "./Sche2";
 
 const MainBody = () => {
   const [data, setData] = useState(null);
@@ -11,12 +12,9 @@ const MainBody = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "/api/clothes/recommend?date=2023-05-17",
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axios.get("/api/clothes/recommend", {
+          withCredentials: true,
+        });
         setData(response.data);
       } catch (error) {
         console.error(error);
@@ -51,16 +49,11 @@ const MainBody = () => {
             <div className="test2"></div>
           </Slider>
         </div>
-        <div className="bodySlick sche">
-          <img src={sche} alt="스케쥴" />
-          <p>
-            당신을 위한 AI서비스와 함께
-            <br />
-            당신의 일정으로 W&C의
-            <br />
-            옷장을 채워보세요
-          </p>
-        </div>
+
+        {/* 비로그인 상태  */}
+        {/* <Sche1></Sche1> */}
+        {/* 로그인 상태  */}
+        <Sche2></Sche2>
       </div>
       <div className="mainBody flex">
         <button className="styleSelect">스타일 선택</button>
@@ -102,18 +95,7 @@ const MainBody = () => {
           border: none;
           background: white;
         }
-        .sche img {
-          width: 200px;
-          height: 178.87px;
-          margin: 0px 0px 45px;
-        }
-        .sche p {
-          font-family: "Noto Sans";
-          font-style: normal;
-          font-weight: 400;
-          font-size: 25px;
-          text-align: center;
-        }
+
         .test1 {
           background-color: black;
           width: 300px;
