@@ -11,17 +11,10 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
     "react-scripts": "5.0.1",
-<<<<<<< HEAD
-    "recoil": "^0.7.7",
-<<<<<<< HEAD
-=======
     "react-slick": "^0.29.0",
     "recoil": "^0.7.7",
     "slick-carousel": "^1.8.1",
->>>>>>> cde5a9de60abc0586be6f052a11c6e3a836e0b12
-=======
     "styled-components": "^6.0.0-rc.2",
->>>>>>> feat/MyPage
     "web-vitals": "^2.1.4"
   },
   "scripts": {
