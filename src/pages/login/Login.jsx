@@ -51,7 +51,7 @@ const handlebButtonClick = () => {
   const naverCode = new URL(window.location.href).searchParams.get("code");
   console.log(naverCode)
 
-
+  
   return( 
   <div className="loginForm">
      <img src={logo} className="logo" alt="로고" />

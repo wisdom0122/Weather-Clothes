@@ -22,6 +22,8 @@ const handleChangeModal = () => {
   setOpenChangeModal(true)
 }
 
+
+
   let myPageFormStyle = {
     width: "766px",
     paddingBottom: "127px",
@@ -73,6 +75,9 @@ const handleChangeModal = () => {
     letterSpacing: '0.07em',
     color: "#000000"
   }
+
+
+
 
   return (
   <>

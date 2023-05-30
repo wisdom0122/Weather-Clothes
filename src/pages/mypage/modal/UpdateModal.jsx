@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
+import axios from 'axios';
 import styled from "styled-components";
 
-export default function updateModal({ setOpenUpdateModal }) {
+export default function UpdateModal({ setOpenUpdateModal }) {
   const closeUpdateModal = () => {
     setOpenUpdateModal(false);
   };
@@ -9,6 +10,54 @@ export default function updateModal({ setOpenUpdateModal }) {
   const handleInsideClick = (event) => {
     event.stopPropagation();
   };
+
+  const [regions, setRegions] = useState([]);
+  const [gender, setGender] = useState('');
+  const [region, setRegion] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // 성별과 지역 입력 상태를 확인하여 에러 메시지를 띄우는 함수
+  const handleUpdate = () => {
+    if (!gender || !region) {
+      setErrorMessage('성별과 지역 모두를 입력해주세요!');
+      return;
+    }
+  };
+
+
+  /*
+// 기본 fetch 방식을 이용한 REST API 호출
+    useEffect(() => {
+      fetch('/api/regions')
+        .then(response => response.json())
+        .then(data => {
+          setRegions(data);
+        })
+        .catch(error => {
+          // 에러를 처리합니다.
+          console.error(error);
+        });
+    }, []);
+*/
+    
+// axios, async/await 을 사용한 REST API 호출
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('/api/regions');
+      setRegions(response.data);
+
+    } catch (error) {
+      // 에러를 처리합니다.
+      console.error(error);
+    }
+  };
+
+// regions를 렌더링하거나 처리하는 부분
+  fetchData();
+}, []);
+
+console.log(regions);
 
   return (
     <>
@@ -34,14 +83,16 @@ export default function updateModal({ setOpenUpdateModal }) {
           <UpdateModalFormContents>
             <div className="radio">
               <span>성별</span>
-              <input type="radio" name="sex" value="man" />
+              <input type="radio" name="sex" value="man" onChange={e => setGender(e.target.value)}
+ />
               <label id="man">남성</label>
-              <input type="radio" name="sex" value="woman" />
+              <input type="radio" name="sex" value="woman"  onChange={e => setGender(e.target.value)}
+/>
               <label>여성</label>
             </div>
             <div className="selectBox">
               <span>지역</span>
-              <select>
+              <select onChange={e => setRegion(e.target.value)} >
                 <option key="seoul value=" seoul>
                   강남
                 </option>
@@ -50,8 +101,8 @@ export default function updateModal({ setOpenUpdateModal }) {
                 </option>
               </select>
             </div>
-            <p className="warningMessage">성별과 지역 모두를 입력해주세요!</p>
-            <button>업데이트</button>
+            {errorMessage && <p className="warningMessage">성별과 지역 모두를 입력해주세요!</p>}
+            <button onClick={handleUpdate} >업데이트</button>
           </UpdateModalFormContents>
         </UpdateModalForm>
       </UpdateModalPage>
@@ -97,7 +148,7 @@ const UpdateModalFormContents = styled.div`
   button {
     width: 115px;
     height: 50px;
-    margin-top: 12px;
+    margin-top: 40px;
     background: #ffffff;
     border: 2px solid #d9d9d9;
     font-family: "Roboto";
@@ -112,7 +163,7 @@ const UpdateModalFormContents = styled.div`
     color: #000000;
   }
   .warningMessage {
-    margin-top: 35px;
+    margin-top: 15px;
     display: flex;
     justify-content: center;
     font-family: "Inter";
