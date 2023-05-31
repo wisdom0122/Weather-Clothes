@@ -55,9 +55,9 @@ const MainBody = () => {
         </div>
 
         {/* 비로그인 상태  */}
-        {/* <Sche1></Sche1> */}
+        <Sche1></Sche1>
         {/* 로그인 상태  */}
-        <Sche2></Sche2>
+        {/* <Sche2></Sche2> */}
       </div>
       <div className="mainBody flex">
         <button className="styleSelect">스타일 선택</button>

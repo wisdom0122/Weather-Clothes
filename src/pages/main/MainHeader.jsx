@@ -27,11 +27,12 @@ const MainHeader = () => {
           flex-direction: row;
           gap: 4rem;
           padding: 1rem;
-          width: 75vw;
+          width: 80vw;
           border-radius: 10px;
           justify-content: center;
           height: 142px;
-          line-height: 48px;
+          line-height: 8px;
+          align-items: center;
         }
         .mainHeader div {
           display: flex;
@@ -40,12 +41,14 @@ const MainHeader = () => {
         }
         .mainHeader img {
           border-radius: 50%;
+          margin-bottom: 3%;
         }
         .mainHeader p {
           color: white;
           font-family: "Noto Sans";
           font-size: 1.6rem;
           font-weight: 700;
+          margin-bottom: 0px;
         }
       `}</style>
     </div>
