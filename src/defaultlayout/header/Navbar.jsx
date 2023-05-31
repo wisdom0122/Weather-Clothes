@@ -7,7 +7,7 @@ const Navbar = () => {
     <nav className="flex justify-around items-center py-4 px-6 font-bold navbar">
       <div>
         <Link to="/" className="text-2xl text-gray-800">
-          <img src={logo} alt="Logo"></img>
+          <img className="logoImg" src={logo} alt="Logo"></img>
         </Link>
       </div>
       <ul className="flex gap-4">
@@ -37,11 +37,22 @@ const Navbar = () => {
         </li>
       </ul>
       <ul className="flex gap-4">
-        {" "}
         <li className="weatherBox">{/* 날씨 컴포넌트  */} 날씨 </li>
       </ul>
       <style jsx>{`
+        .weatherBox {
+          width: 309px;
+          height: 47px;
+          border: 1px solid black;
+          margin-right: 150px;
+        }
+        .logoImg {
+          width: 230px;
+          height: 80.16px;
+          margin-left: 150px;
+        }
         .navbar {
+          margin-bottom: 30px;
         }
       `}</style>
     </nav>

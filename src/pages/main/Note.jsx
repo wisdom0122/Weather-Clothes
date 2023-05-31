@@ -68,11 +68,7 @@ const Note = () => {
           />
           저녁
         </label>
-        {!isEditing && (
-          <span onClick={handleNoteEdit} className="note-content">
-            {notes[meal] ? notes[meal] : "메모 입력"}
-          </span>
-        )}
+
         {isEditing && (
           <div>
             <textarea
@@ -83,14 +79,31 @@ const Note = () => {
             <button onClick={handleNoteSave}>저장</button>
           </div>
         )}
+        {notes[meal] && !isEditing && (
+          <button onClick={handleNoteEdit}>수정</button>
+        )}
         {notes[meal] && <button onClick={handleNoteDelete}>삭제</button>}
       </div>
       <div>
-        <h2>메모 내용</h2>
         <ul>
-          <li>아침: {notes["아침"]}</li>
-          <li>점심: {notes["점심"]}</li>
-          <li>저녁: {notes["저녁"]}</li>
+          <li>
+            아침:
+            <span onClick={handleNoteEdit} className="note-content">
+              {notes["아침"] ? notes["아침"] : "메모 입력"}
+            </span>
+          </li>
+          <li>
+            점심:
+            <span onClick={handleNoteEdit} className="note-content">
+              {notes["점심"] ? notes["점심"] : "메모 입력"}
+            </span>
+          </li>
+          <li>
+            저녁:
+            <span onClick={handleNoteEdit} className="note-content">
+              {notes["저녁"] ? notes["저녁"] : "메모 입력"}
+            </span>
+          </li>
         </ul>
       </div>
     </div>

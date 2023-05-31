@@ -5,14 +5,33 @@ import logo from "../../assets/images/sample_logo_3.png";
 
 const Register = () => {
   const [email, setEmail] = useState(""); // 보낼 이메일 저장
+  const [password, setPassword] = useState(""); // 비밀번호 저장
+  const [passwordConfirm, setPasswordConfirm] = useState(""); // 비밀번호 확인
+  const [name, setName] = useState(""); // 이름 저장
+
+  const [isPasswordMatched, setIsPasswordMatched] = useState(true); // 비밀번호 일치 여부 상태
+
   const [authKey, setAuthKey] = useState(""); // 인증키 저장
   const [timer, setTimer] = useState(300); // 초 단위로 5분(300초) 설정
   const [isTimerStarted, setIsTimerStarted] = useState(false); // 타이머 시작 여부 상태
   const [isAuthCodeChecked, setIsAuthCodeChecked] = useState(false); // 인증 번호 확인
+  const [allowSign, setAllowSign] = useState(false); // 인증 번호 확인
 
   //이메일 저장 함수
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
+  };
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setIsPasswordMatched(e.target.value === passwordConfirm);
+  };
+
+  const handlePasswordConfirmChange = (e) => {
+    setPasswordConfirm(e.target.value);
+    setIsPasswordMatched(e.target.value === password);
+  };
+  const handleNameChange = (e) => {
+    setName(e.target.value);
   };
   // 인증키 저장 함수
   const handleAuthKeyChange = (e) => {
@@ -25,11 +44,13 @@ const Register = () => {
       const response = await axios.post("/api/auth/email/auth-key", {
         email: email,
       });
+      console.log("인증번호 보낸 이메일:", email);
       console.log("인증번호 요청 성공:", response.data);
       setIsTimerStarted(true); // 인증번호 요청 성공 시 타이머 시작
       // 필요한 추가 로직 작성
     } catch (error) {
       console.error("인증번호 요청 실패:", error.response.data);
+
       // 필요한 추가 로직 작성
     }
   };
@@ -42,11 +63,42 @@ const Register = () => {
         authKey: authKey,
       });
       console.log("인증코드 확인 성공:", response.data);
+      // 인증 확인 값 저장 (true or false가 저장되어있음)
       setIsAuthCodeChecked(response.data.result);
       // 필요한 추가 로직 작성
     } catch (error) {
       console.error("인증코드 확인 실패:", error.response.data);
       // 필요한 추가 로직 작성
+    }
+  };
+  // 회원가입 정보 POST
+  const handleSignUp = async () => {
+    try {
+      const signUpData = {
+        email: email,
+        password: passwordConfirm,
+        name: name,
+        emailAuthResult: isAuthCodeChecked,
+      };
+
+      const response = await axios.post("/api/auth/sign-up", signUpData);
+      console.log("회원가입 정보 전송 성공:", response.data);
+      // 필요한 추가 로직 작성
+    } catch (error) {
+      console.error("회원가입 정보 전송 실패:", error.response.data);
+      // 필요한 추가 로직 작성
+    }
+  };
+  // 회원가입 유효성 최종
+  const handleClickSignIn = async () => {
+    if (
+      isAuthCodeChecked &&
+      isPasswordMatched &&
+      password.length > 1 &&
+      name > 1
+    ) {
+      setAllowSign(true);
+      await handleSignUp();
     }
   };
 
@@ -94,16 +146,37 @@ const Register = () => {
         onChange={handleAuthKeyChange}
       />
       <p id="pwTitle">비밀번호</p>
-      <input className="registerInput" />
+      <input
+        className="registerInput"
+        placeholder="비밀번호"
+        value={password}
+        onChange={handlePasswordChange}
+      />
       <input
         className="registerInput"
         placeholder="비밀번호 확인"
         id="registerInput-bottom"
+        value={passwordConfirm}
+        onChange={handlePasswordConfirmChange}
       />
-      <p id="disagreeText">비밀번호가 일치하지 않습니다.</p>
+      {!isPasswordMatched ? (
+        <p id="disagreeText">비밀번호가 일치하지 않습니다.</p>
+      ) : (
+        <p id="correct"></p>
+      )}
       <p>이름</p>
-      <input className="registerInput" />
-      <button className="registerButton">가입하기</button>
+      <input
+        className="registerInput"
+        value={name}
+        onChange={handleNameChange}
+      />
+      <button
+        className={allowSign ? "registerButton" : "registerButton signAllow"}
+        onClick={handleClickSignIn}
+        disabled={allowSign}
+      >
+        가입하기
+      </button>
       <button
         className="buttonConfirm"
         id="certifyButton"
