@@ -1,4 +1,5 @@
 import React from "react";
+import Weather from "./Weather"
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/sample_logo_3.png";
 
@@ -37,14 +38,12 @@ const Navbar = () => {
         </li>
       </ul>
       <ul className="flex gap-4">
-        <li className="weatherBox">{/* 날씨 컴포넌트  */} 날씨 </li>
+        <li className="weatherBox"><Weather/></li>
       </ul>
       <style jsx>{`
         .weatherBox {
-          width: 309px;
-          height: 47px;
-          border: 1px solid black;
-          margin-right: 150px;
+
+          margin-right: 100px;
         }
         .logoImg {
           width: 230px;
