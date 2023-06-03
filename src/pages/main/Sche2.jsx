@@ -3,7 +3,7 @@ import sche from "../../assets/images/sche.png";
 import vecto from "../../assets/images/vecto.png";
 import NoteApp from "./NoteApp";
 
-const Sche2 = () => {
+const Sche2 = ({ setSelectedScheduleId }) => {
   const [date, setDate] = useState(new Date());
 
   // date 객체를 "2023-05-15" 형식의 문자열로 변환
@@ -44,7 +44,10 @@ const Sche2 = () => {
       </div>
       {/* 메모장  */}
       <div className="scheMemo">
-        <NoteApp postdate={postdate} />
+        <NoteApp
+          postdate={postdate}
+          setSelectedScheduleId={setSelectedScheduleId}
+        />
       </div>
       <style jsx>
         {`
