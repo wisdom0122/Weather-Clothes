@@ -14,16 +14,28 @@ export default function UpdateModal({ setOpenUpdateModal }) {
   const [regions, setRegions] = useState([]);
   const [gender, setGender] = useState('');
   const [region, setRegion] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(false);
 
-  // 성별과 지역 입력 상태를 확인하여 에러 메시지를 띄우는 함수
-  const handleUpdate = () => {
-    if (!gender || !region) {
-      setErrorMessage('성별과 지역 모두를 입력해주세요!');
-      return;
-    }
+
+
+  const handleGenderChange = (e) => {
+    setGender(e.target.value);
+    console.log("gender",gender);
   };
 
+  const handleRegionChange = (e) => {
+    setRegion(e.target.value);
+    console.log("region",region);
+  };
+
+  // 성별과 지역 입력 상태를 확인하여 에러 메시지를 띄우는 함수
+  const handleUpdate = (e) => {
+    if (!gender && !region) {
+      setErrorMessage('성별과 지역 모두를 입력해주세요!');
+    } else {
+      return;
+    }
+  };  
 
   /*
 // 기본 fetch 방식을 이용한 REST API 호출
@@ -83,25 +95,23 @@ console.log(regions);
           <UpdateModalFormContents>
             <div className="radio">
               <span>성별</span>
-              <input type="radio" name="sex" value="man" onChange={e => setGender(e.target.value)}
- />
+              <input type="radio" name="gender" value="man" checked={gender === 'man'} onChange={handleGenderChange} />
               <label id="man">남성</label>
-              <input type="radio" name="sex" value="woman"  onChange={e => setGender(e.target.value)}
-/>
+              <input type="radio" name="gender" value="woman" checked={gender === 'woman'} onChange={handleGenderChange} />
               <label>여성</label>
             </div>
             <div className="selectBox">
               <span>지역</span>
-              <select onChange={e => setRegion(e.target.value)} >
-                <option key="seoul value=" seoul>
+              <select value={region} onChange={handleRegionChange} >
+                <option key="강남" value="강남">
                   강남
                 </option>
-                <option key="seoul value=" seoul>
+                <option key="서초" value="서초">
                   서초
                 </option>
               </select>
             </div>
-            {errorMessage && <p className="warningMessage">성별과 지역 모두를 입력해주세요!</p>}
+            {errorMessage && <p className="warningMessage">{errorMessage}</p>}
             <button onClick={handleUpdate} >업데이트</button>
           </UpdateModalFormContents>
         </UpdateModalForm>

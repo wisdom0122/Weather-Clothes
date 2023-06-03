@@ -30,13 +30,13 @@ export default Bookmark;
 
 const BookmarkPage = styled.div`
   display: flex;
-  margin-top: 57px;
+  margin-top: 50px;
 
   .bookMarkSide {
     display: flex;
     flex-direction: column;
     gap: 33px;
-    margin: 140px 111px 0 255px;
+    margin: 120px 111px 0 115px;
     width: 125px;
     font-family: "Roboto";
     font-style: normal;
@@ -49,7 +49,7 @@ const BookmarkPage = styled.div`
   }
 
   .bookMarkMain {
-    width: 1000px;
+    width: 913px;
   }
 
   .bookMarkMainTitle {

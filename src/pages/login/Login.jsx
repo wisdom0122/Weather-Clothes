@@ -1,4 +1,5 @@
-import React,{ useState } from "react";
+import React,{ useState,useEffect } from "react";
+import axios from 'axios';
 import { Link } from "react-router-dom";
 import "./Login.css"
 import logo from "../../assets/images/sample_logo_3.png"
@@ -51,6 +52,49 @@ const handlebButtonClick = () => {
   const naverCode = new URL(window.location.href).searchParams.get("code");
   console.log(naverCode)
 
+  // 비밀번호 찾기
+  useEffect(() => {
+  const findMemberPassword = async (email) => {
+    const url = '/api/members/password/find';
+    const data = {
+      email: email
+    };
+  
+    try {
+      const response = await axios.post(url, data);
+      // 비밀번호 재설정 이메일을 전송한 후에 수행할 작업
+      console.log('비밀번호 재설정 이메일 전송됨:', response.data);
+    } catch (error) {
+      // 요청이 실패한 경우에 대한 처리
+      console.error('비밀번호 찾기 요청 실패:', error);
+    }
+  };
+  findMemberPassword();
+}, []);
+
+// 비밀번호 수정
+useEffect( ()=>{
+const updateMemberPassword = async (newPassword) => {
+  const url = '/api/members/password';
+  const headers = {
+    'Cookie': 'accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None',
+  };
+  const data = {
+    newPassword: newPassword
+  };
+
+  try {
+    const response = await axios.patch(url, data, { headers });
+    // 비밀번호 수정 후에 수행할 작업
+    console.log('비밀번호 수정 완료:', response.data);
+  } catch (error) {
+    // 요청이 실패한 경우에 대한 처리
+    console.error('비밀번호 수정 실패:', error);
+  }
+};
+
+updateMemberPassword();
+},[]);
   
   return( 
   <div className="loginForm">

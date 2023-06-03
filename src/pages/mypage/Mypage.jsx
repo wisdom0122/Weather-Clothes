@@ -1,5 +1,6 @@
 import React from "react";
-import { useState } from "react";
+import axios from 'axios';
+import { useState,useEffect } from "react";
 import CertifyModal from "./modal/CertifyModal";
 import ChangeModal from "./modal/ChangeModal"
 import UpdateModal from "./modal/UpdateModal";
@@ -21,6 +22,32 @@ const handleCertifyModal = () => {
 const handleChangeModal = () => {
   setOpenChangeModal(true)
 }
+
+// axios, async/await 을 사용한 REST API 호출
+useEffect(() => {
+const fetchMemberProfile = async () => {
+  const url = '/api/members/profile';
+  const headers = {
+    'Cookie': 'accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None',
+  };
+
+  try {
+    const response = await axios.get(url, { headers });
+    // 성공적으로 회원정보를 조회한 경우에 대한 처리
+    const memberProfile = response.data;
+    // 회원정보를 사용하는 로직
+    console.log("memberProfile",memberProfile);
+
+    return memberProfile; // 회원정보를 반환
+  } catch (error) {
+    // 요청이 실패한 경우에 대한 처리
+    console.error('회원정보 조회 실패:', error);
+  }
+};
+fetchMemberProfile();
+}, []);
+
+// const memberId = memberProfile.memberId;
 
 
 
@@ -44,7 +71,6 @@ const handleChangeModal = () => {
     fontWeight: "700",
     fontSize: "20px",
     lineHeight: "23px",
-    letterSpacing: "0.03px",
     color:"#000000"
   }
 
@@ -58,7 +84,6 @@ const handleChangeModal = () => {
     lineHeight: '29px',
     display: 'flex',
     justifyContent: "center",
-    letterSpacing: '0.07em',
     color: "#000000"
   }
 
@@ -72,7 +97,6 @@ const handleChangeModal = () => {
     lineHeight: '23px',
     display: 'flex',
     justifyContent: "center",
-    letterSpacing: '0.07em',
     color: "#000000"
   }
 
@@ -94,8 +118,8 @@ const handleChangeModal = () => {
         </div>
         <div className="profileBoxText">
           <div className="name">***님 반갑습니다</div>
-          <p>*성별과 지역을 입력하시면 맞춤 AI 추천 서비스를 받으실 수 있습니다</p>
-          <p>*전화번호를 입력하시면 추천 스타일을 문자로 받으실 수 있습니다</p>
+          <p className="profileBoxTextContents">성별과 지역을 입력하시면 맞춤 AI 추천 서비스를 받으실 수 있습니다</p>
+          <p className="profileBoxTextContents">*전화번호를 입력하시면 추천 스타일을 문자로 받으실 수 있습니다</p>
           <style jsx>{`
           .profileBoxText{
             display:flex;
@@ -113,7 +137,7 @@ const handleChangeModal = () => {
             text-align: left;
             color: #000000;
            }
-            p {
+        .profileBoxTextContents{
               margin: 5px 0 0 0;
               color: #3F8DED;
               font-family: 'Roboto';
@@ -124,7 +148,6 @@ const handleChangeModal = () => {
               display: flex;
               align-items: center;
               text-align: center;
-              letter-spacing: 0.07em;
             }
           `}</style>
         </div>
