@@ -6,11 +6,8 @@ import "slick-carousel/slick/slick-theme.css";
 import Sche1 from "./Sche1";
 import Sche2 from "./Sche2";
 
-const MainBody = () => {
+const MainBody2 = () => {
   const [clothesData, setClothesData] = useState(null);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [selectedScheduleId, setSelectedScheduleId] = useState(null);
-  const [selectClothes, setSelectClothes] = useState(false);
 
   useEffect(() => {
     const getCurrentDate = () => {
@@ -43,30 +40,13 @@ const MainBody = () => {
     getClothesRecommendation();
   }, []);
 
-  const handlePostData = async () => {
+  const handlePostData = async (topId, bottomId) => {
     try {
-      const currentTop = allTops[currentSlideIndex];
-      const currentBottom = allBottoms[currentSlideIndex];
-
-      // 스케줄 아이디값 로직
-      let scheduleId = null;
-      if (selectedScheduleId === "morning") {
-        scheduleId = clothesData.morning.scheduleDetail?.id || null;
-      } else if (selectedScheduleId === "afternoon") {
-        scheduleId = clothesData.afternoon.scheduleDetail?.id || null;
-      } else if (selectedScheduleId === "evening") {
-        scheduleId = clothesData.evening.scheduleDetail?.id || null;
-      }
       const response = await axios.post(
-        "/api/clothes/choice",
+        "/api/post",
         {
-          topId: currentTop.id,
-          bottomId: currentBottom.id,
-          scheduleDetailId: scheduleId,
-
-          // scheduleDetailId: currentScheduleDetail
-          //   ? currentScheduleDetail.id
-          //   : null, // scheduleDetail이 있는지 확인하고 id 추출
+          topId,
+          bottomId,
         },
         {
           headers: {
@@ -76,10 +56,6 @@ const MainBody = () => {
         }
       );
       console.log(response.data); // POST 요청에 대한 응답 처리
-      setSelectClothes(true);
-      setTimeout(() => {
-        setSelectClothes(false);
-      }, 1000);
     } catch (error) {
       console.log(error);
     }
@@ -109,35 +85,27 @@ const MainBody = () => {
     slidesToScroll: 1,
     arrows: true,
   };
-  console.log(selectedScheduleId);
+
   return (
     <div>
       {clothesData && (
         <div className="flex flex-row mainBody">
           <div className="bodySlick">
-            <Slider
-              {...settings}
-              afterChange={(index) => setCurrentSlideIndex(index)}
-            >
+            <Slider {...settings}>
               {allTops.map((top) => (
                 <div key={top.id}>
-                  <a href={top.itemUrl}>
-                    <img src={top.imgUrl} alt={top.id} />
-                  </a>
+                  <img src={top.imgUrl} alt={top.id} />
+                  <a href={top.itemUrl}>상품 링크</a>
                 </div>
               ))}
             </Slider>
           </div>
           <div className="bodySlick">
-            <Slider
-              {...settings}
-              afterChange={(index) => setCurrentSlideIndex(index)}
-            >
+            <Slider {...settings}>
               {allBottoms.map((bottom) => (
                 <div key={bottom.id}>
-                  <a href={bottom.itemUrl}>
-                    <img src={bottom.imgUrl} alt={bottom.id} />
-                  </a>
+                  <img src={bottom.imgUrl} alt={bottom.id} />
+                  <a href={bottom.itemUrl}>상품 링크</a>
                 </div>
               ))}
             </Slider>
@@ -154,13 +122,15 @@ const MainBody = () => {
           <div className="bodySlick">
             <Slider {...settings}>
               <div>
+                <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
                 <a href="https://www.brandi.co.kr/products/91657001?search-word=%EC%A0%B8%EC%A7%80">
-                  <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
+                  상품 링크
                 </a>
               </div>
               <div>
+                <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
                 <a href="https://www.brandi.co.kr/products/91657001?search-word=%EC%A0%B8%EC%A7%80">
-                  <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
+                  상품 링크
                 </a>
               </div>
             </Slider>
@@ -168,13 +138,15 @@ const MainBody = () => {
           <div className="bodySlick">
             <Slider {...settings}>
               <div>
+                <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
                 <a href="https://www.brandi.co.kr/products/91657001?search-word=%EC%A0%B8%EC%A7%80">
-                  <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
+                  상품 링크
                 </a>
               </div>
               <div>
+                <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
                 <a href="https://www.brandi.co.kr/products/91657001?search-word=%EC%A0%B8%EC%A7%80">
-                  <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
+                  상품 링크
                 </a>
               </div>
             </Slider>
@@ -183,30 +155,13 @@ const MainBody = () => {
           {/* 비로그인 상태  */}
           {/* <Sche1></Sche1> */}
           {/* 로그인 상태  */}
-          <Sche2 setSelectedScheduleId={setSelectedScheduleId}></Sche2>
+          <Sche2></Sche2>
         </div>
       )}
       <div className="mainBody flex">
-        <button className="styleSelect" onClick={handlePostData}>
-          스타일 선택
-        </button>
-        {selectClothes && (
-          <div className="successMessage">추천스타일에 저장 되었습니다.</div>
-        )}
+        <button className="styleSelect">스타일 선택</button>
       </div>
       <style jsx>{`
-        .successMessage {
-          transform: translateX(-93%);
-          font-family: "Noto Sans";
-          font-style: normal;
-          font-weight: 400;
-          font-size: 15px;
-          line-height: 61px;
-          text-align: center;
-          height: 61px;
-
-          color: #3f8ded;
-        }
         .styleSelect {
           background: #eef0f3;
           border-radius: 20px;
@@ -266,4 +221,4 @@ const MainBody = () => {
   );
 };
 
-export default MainBody;
+export default MainBody2;

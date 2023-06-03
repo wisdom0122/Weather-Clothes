@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import delIcon from "../../assets/images/Vector.png";
 
-const NoteApp = ({ postdate }) => {
+const NoteApp = ({ postdate, setSelectedScheduleId }) => {
   // 전체 수정 관리
   const [isEditing, setIsEditing] = useState(false);
   // 아침 메모 수정 관리
@@ -48,6 +48,7 @@ const NoteApp = ({ postdate }) => {
       setAfternoonEdit(false);
       setmorningEdit(true);
     }
+    setSelectedScheduleId("morning");
   };
   const deleteMorning = () => {
     setMorningMemo("");
@@ -71,6 +72,7 @@ const NoteApp = ({ postdate }) => {
       setAfternoonEdit(true);
       setmorningEdit(false);
     }
+    setSelectedScheduleId("afternoon");
   };
   const deleteAfternoon = () => {
     setAfternoonMemo("");
@@ -90,6 +92,7 @@ const NoteApp = ({ postdate }) => {
       setAfternoonEdit(false);
       setmorningEdit(false);
     }
+    setSelectedScheduleId("evening");
   };
   const deleteEvening = () => {
     setEveningMemo("");
