@@ -5,8 +5,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Sche1 from "./Sche1";
 import Sche2 from "./Sche2";
+import { useRecoilValue } from "recoil";
+import { isLoggedInState } from "../../recoil/atom";
 
 const MainBody = () => {
+  const isLoggedIn = useRecoilValue(isLoggedInState);
+
   const [clothesData, setClothesData] = useState(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
@@ -88,15 +92,15 @@ const MainBody = () => {
   // top 배열 모으기
   const allTops = clothesData
     ? Object.values(clothesData).reduce((acc, meal) => {
-        const tops = meal.clothes.top || [];
+        const tops = meal.clothes && meal.clothes.top ? meal.clothes.top : [];
         return acc.concat(tops);
       }, [])
     : [];
 
-  // bottom 배열 모으기
   const allBottoms = clothesData
     ? Object.values(clothesData).reduce((acc, meal) => {
-        const bottoms = meal.clothes.bottom || [];
+        const bottoms =
+          meal.clothes && meal.clothes.bottom ? meal.clothes.bottom : [];
         return acc.concat(bottoms);
       }, [])
     : [];
@@ -109,7 +113,7 @@ const MainBody = () => {
     slidesToScroll: 1,
     arrows: true,
   };
-  console.log(selectedScheduleId);
+
   return (
     <div>
       {clothesData && (
@@ -142,11 +146,7 @@ const MainBody = () => {
               ))}
             </Slider>
           </div>
-
-          {/* 비로그인 상태  */}
-          {/* <Sche1></Sche1> */}
-          {/* 로그인 상태  */}
-          <Sche2></Sche2>
+          {!isLoggedIn ? <Sche1></Sche1> : <Sche2></Sche2>}
         </div>
       )}
       {!clothesData && (
@@ -155,7 +155,7 @@ const MainBody = () => {
             <Slider {...settings}>
               <div>
                 <a href="https://www.brandi.co.kr/products/91657001?search-word=%EC%A0%B8%EC%A7%80">
-                  <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
+                  옷을 불러오고 있습니다
                 </a>
               </div>
               <div>
@@ -169,7 +169,7 @@ const MainBody = () => {
             <Slider {...settings}>
               <div>
                 <a href="https://www.brandi.co.kr/products/91657001?search-word=%EC%A0%B8%EC%A7%80">
-                  <img src="https://image.brandi.me/cproduct/2023/02/10/SB000000000084505689_1675999480_image1_S.jpeg" />
+                  옷을 불러오고 있습니다
                 </a>
               </div>
               <div>
@@ -180,10 +180,7 @@ const MainBody = () => {
             </Slider>
           </div>
 
-          {/* 비로그인 상태  */}
-          {/* <Sche1></Sche1> */}
-          {/* 로그인 상태  */}
-          <Sche2 setSelectedScheduleId={setSelectedScheduleId}></Sche2>
+          <Sche1></Sche1>
         </div>
       )}
       <div className="mainBody flex">
@@ -195,6 +192,10 @@ const MainBody = () => {
         )}
       </div>
       <style jsx>{`
+        .bodySlick img {
+          width: 400px;
+          height: 360px;
+        }
         .successMessage {
           transform: translateX(-93%);
           font-family: "Noto Sans";

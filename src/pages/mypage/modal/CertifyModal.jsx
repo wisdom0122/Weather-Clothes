@@ -1,6 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
-export default function certifyModal({ setOpenCertifyModal }) {
+
+export default function CertifyModal({
+  setOpenCertifyModal,
+  setMyphoneNumber,
+}) {
+  const [timerId, setTimerId] = useState(null);
+  const [timer, setTimer] = useState("05:00"); // 타이머 상태 변수
+  const [timerVisible, setTimerVisible] = useState(false);
+  const [wrongPassword, setWrongPassword] = useState(false);
+
+  const startTimer = () => {
+    let minutes = 5;
+    let seconds = 0;
+
+    const intervalId = setInterval(() => {
+      // 1초마다 타이머 감소
+      seconds--;
+      if (seconds < 0) {
+        minutes--;
+        seconds = 59;
+      }
+
+      // 타이머가 0:00이 되면 타이머 정지
+      if (minutes === 0 && seconds === 0) {
+        clearInterval(intervalId);
+      }
+
+      // 타이머를 "mm:ss" 형식으로 업데이트
+      const formattedMinutes = minutes.toString().padStart(2, "0");
+      const formattedSeconds = seconds.toString().padStart(2, "0");
+      setTimer(`${formattedMinutes}:${formattedSeconds}`);
+    }, 1000);
+
+    // 타이머 ID를 상태 변수에 저장
+    setTimerId(intervalId);
+  };
+
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [checkNumber, setCheckNumber] = useState("");
+  const [numberOK, setNumberOK] = useState(false);
+
+  const onChangePhone = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+  const onChangeNumber = (e) => {
+    setCheckNumber(e.target.value);
+  };
   const closeCertifyModal = () => {
     setOpenCertifyModal(false);
   };
@@ -9,6 +56,61 @@ export default function certifyModal({ setOpenCertifyModal }) {
     event.stopPropagation();
   };
 
+  const sendAuthRequest = async () => {
+    const url = "/api/members/phone/auth-num";
+
+    try {
+      const response = await axios.post(
+        url,
+        { phone: phoneNumber },
+        {
+          headers: {
+            Cookie:
+              "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+          },
+        }
+      );
+
+      // 응답 처리
+      console.log(response.data); // 응답 데이터 출력
+      startTimer();
+    } catch (error) {
+      // 에러 처리
+      console.error(error);
+    }
+  };
+
+  // 인증번호 확인
+  const checkRequest = async () => {
+    const url = "/api/members/phone/auth-num/check";
+
+    try {
+      const response = await axios.post(
+        url,
+        { phone: phoneNumber, authNumber: checkNumber },
+        {
+          headers: {
+            Cookie:
+              "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+          },
+        }
+      );
+
+      // 응답 처리
+      console.log(response.data); // 응답 데이터 출력
+      setNumberOK(response.data.result);
+      clearInterval(timerId);
+      setTimerVisible(false); // 타이머 표시 설정
+    } catch (error) {
+      // 에러 처리
+      console.error(error);
+      setWrongPassword(true);
+    }
+  };
+
+  const certifyNumber = () => {
+    setMyphoneNumber(phoneNumber);
+  };
   return (
     <>
       <CertifyModalPage onClick={closeCertifyModal}>
@@ -33,21 +135,46 @@ export default function certifyModal({ setOpenCertifyModal }) {
           <CertifyModalFormContents>
             <span>전화번호</span>
             <div className="certifyItems">
-              <input />
-              <button className="blueButton">인증하기</button>
+              <input value={phoneNumber} onChange={onChangePhone} />
+              <button
+                className="blueButton"
+                onClick={() => {
+                  sendAuthRequest();
+                  setTimerVisible(true); // 타이머 표시 설정
+                }}
+              >
+                인증하기
+              </button>
             </div>
             <div className="certifyItems">
-              <input />
-              <button className="blueButton">확인</button>
+              <input value={checkNumber} onChange={onChangeNumber} />
+              <button
+                className="blueButton"
+                timerVisible={timerVisible}
+                onClick={checkRequest}
+                disabled={!timerVisible}
+              >
+                확인
+              </button>
             </div>
-            <p className="warningMessage">
-              인증번호를 다시 한 번 확인해주세요!
-            </p>
-            <button>인증하기</button>
-            <div className="timer">05:00</div>
+            {wrongPassword && (
+              <p className="warningMessage">
+                인증번호를 다시 한 번 확인해주세요!
+              </p>
+            )}
+            <button onClick={certifyNumber} disabled={!checkNumber}>
+              인증하기
+            </button>
+            {timerVisible && <div className="timer">{timer}</div>}
           </CertifyModalFormContents>
         </CertifyModalForm>
       </CertifyModalPage>
+      <style jsx>{`
+        .disable {
+          background: ${(props) =>
+            props.timerVisible ? "#3f8ded" : "#d9d9d9"};
+        }
+      `}</style>
     </>
   );
 }
@@ -138,7 +265,9 @@ const CertifyModalFormContents = styled.div`
     text-align: center;
     color: #ffffff;
   }
-
+  .disable {
+    background: ${(props) => (props.timerVisible ? "#3f8ded" : "#d9d9d9")};
+  }
   button {
     width: 115px;
     height: 50px;

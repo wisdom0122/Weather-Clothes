@@ -1,6 +1,6 @@
 import React from "react";
-import axios from 'axios';
-import { useState,useEffect } from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 import CertifyModal from "./modal/CertifyModal";
 import ChangeModal from "./modal/ChangeModal";
 import UpdateModal from "./modal/UpdateModal";
@@ -9,38 +9,38 @@ const Mypage = () => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openCertifyModal, setOpenCertifyModal] = useState(false);
   const [openChangeModal, setOpenChangeModal] = useState(false);
+  const [myphoneNumber, setMyphoneNumber] = useState("");
 
   // axios, async/await 을 사용한 REST API 호출
-useEffect(() => {
-  const fetchMemberProfile = async () => {
-    const url = '/api/members/profile';
-    const headers = {
-      'Cookie': 'accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None',
+  useEffect(() => {
+    const fetchMemberProfile = async () => {
+      const url = "/api/members/profile";
+      const headers = {
+        Cookie:
+          "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+      };
+
+      try {
+        const response = await axios.get(url, { headers });
+        // 성공적으로 회원정보를 조회한 경우에 대한 처리
+        const memberProfile = response.data;
+        // 회원정보를 사용하는 로직
+        console.log("memberProfile", memberProfile);
+
+        return memberProfile; // 회원정보를 반환
+      } catch (error) {
+        // 요청이 실패한 경우에 대한 처리
+        console.error("회원정보 조회 실패:", error);
+      }
     };
-  
-    try {
-      const response = await axios.get(url, { headers });
-      // 성공적으로 회원정보를 조회한 경우에 대한 처리
-      const memberProfile = response.data;
-      // 회원정보를 사용하는 로직
-      console.log("memberProfile",memberProfile);
-  
-      return memberProfile; // 회원정보를 반환
-    } catch (error) {
-      // 요청이 실패한 경우에 대한 처리
-      console.error('회원정보 조회 실패:', error);
-    }
-  };
-  fetchMemberProfile();
+    fetchMemberProfile();
   }, []);
-  
+
   // const memberId = memberProfile.memberId;
-  
 
   const handleUpdateModal = () => {
     setOpenUpdateModal(true);
   };
-
 
   const handleCertifyModal = () => {
     setOpenCertifyModal(true);
@@ -102,6 +102,12 @@ useEffect(() => {
     color: "#000000",
   };
 
+  const hidePhoneNumber = (myphoneNumber) => {
+    const regex = /(\d{3})(\d{4})(\d{4})/;
+    return myphoneNumber.replace(regex, "$1-****-****");
+  };
+
+  const maskedPhoneNumber = hidePhoneNumber(myphoneNumber);
   return (
     <>
       {openUpdateModal && (
@@ -114,6 +120,7 @@ useEffect(() => {
         <CertifyModal
           openCertifyModal={openCertifyModal}
           setOpenCertifyModal={setOpenCertifyModal}
+          setMyphoneNumber={setMyphoneNumber}
         />
       )}
       {openChangeModal && (
@@ -148,41 +155,45 @@ useEffect(() => {
               />
             </svg>
           </div>
-        <div className="profileBoxText">
-          <div className="name">***님 반갑습니다</div>
-          <p className="profileBoxTextContents">성별과 지역을 입력하시면 맞춤 AI 추천 서비스를 받으실 수 있습니다</p>
-          <p className="profileBoxTextContents">*전화번호를 입력하시면 추천 스타일을 문자로 받으실 수 있습니다</p>
-          <style jsx>{`
-          .profileBoxText{
-            display:flex;
-            margin-left:43px;
-            flex-direction:column;
-            justify-content:end;
-          }
-          .name{
-            margin-bottom: 8px;
-            font-family: 'Noto Sans';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 30px;
-            line-height: 41px;
-            text-align: left;
-            color: #000000;
-           }
-        .profileBoxTextContents{
-              margin: 5px 0 0 0;
-              color: #3F8DED;
-              font-family: 'Roboto';
-              font-style: normal;
-              font-weight: 400;
-              font-size: 20px;
-              line-height: 23px;
-              display: flex;
-              align-items: center;
-              text-align: center;
-        }
-        `}</style>
-        </div>
+          <div className="profileBoxText">
+            <div className="name">***님 반갑습니다</div>
+            <p className="profileBoxTextContents">
+              성별과 지역을 입력하시면 맞춤 AI 추천 서비스를 받으실 수 있습니다
+            </p>
+            <p className="profileBoxTextContents">
+              *전화번호를 입력하시면 추천 스타일을 문자로 받으실 수 있습니다
+            </p>
+            <style jsx>{`
+              .profileBoxText {
+                display: flex;
+                margin-left: 43px;
+                flex-direction: column;
+                justify-content: end;
+              }
+              .name {
+                margin-bottom: 8px;
+                font-family: "Noto Sans";
+                font-style: normal;
+                font-weight: 400;
+                font-size: 30px;
+                line-height: 41px;
+                text-align: left;
+                color: #000000;
+              }
+              .profileBoxTextContents {
+                margin: 5px 0 0 0;
+                color: #3f8ded;
+                font-family: "Roboto";
+                font-style: normal;
+                font-weight: 400;
+                font-size: 20px;
+                line-height: 23px;
+                display: flex;
+                align-items: center;
+                text-align: center;
+              }
+            `}</style>
+          </div>
         </div>
         <div className="informBox">
           <div className="informBoxTop">
@@ -213,7 +224,7 @@ useEffect(() => {
               <span style={text2}>지역</span>
             </div>
             <div id="informBoxTopleft">
-              <span style={text2}>전화번호</span>
+              <span style={text2}>전화번호 {maskedPhoneNumber}</span>
               <button style={modalButton} onClick={handleCertifyModal}>
                 인증하기
               </button>
