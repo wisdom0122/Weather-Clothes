@@ -1,0 +1,93 @@
+.bookMarkSide {
+  display: flex;
+  flex-direction: column;
+  gap: 33px;
+  margin: 120px 111px 0 115px;
+  width: 125px;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 23px;
+  letter-spacing: -0.05em;
+  color: #000000;
+}
+
+.bookMarkMain {
+  width: 913px;
+}
+
+.bookMarkMainTitle {
+  border-bottom: 4px solid #000000;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 35px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: 0.07em;
+  color: #000000;
+  padding-bottom: 15px;
+}
+
+.itemList {
+  margin-top: 41px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.item {
+  display: flex;
+  margin: 10px;
+  width: calc(50% - 20px); /* 한 줄에 2개의 요소가 보이도록 설정 */
+}
+
+.image {
+  width: 250px;
+  height: 153px;
+  background: #d9d9d9;
+}
+
+.text {
+  display: flex;
+  margin: 20px 0 0 14px;
+  gap: 13px;
+  flex-direction: column;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 21px;
+  align-items: center;
+  text-align: center;
+  color: #000000;
+}
+
+.titleHover {
+  cursor: pointer;
+}
+
+.item img {
+  width: 108px;
+  height: 117px;
+  margin: 0px 10px;
+}
+
+.item div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text {
+  margin: 0px 0px 0px 10px;
+}
+
+.clothesBox {
+  background-color: #d9d9d9;
+  width: 250px;
+  height: 153px;
+}

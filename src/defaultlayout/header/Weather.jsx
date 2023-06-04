@@ -8,19 +8,18 @@ const Weather = () => {
   useEffect(() => {
     const getWeatherData = async () => {
       try {
-        const now = new Date().toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        });
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
 
-        const response = await axios.get("/api/weather/daily", {
+        const response = await axios.get("/api/weather/daliy", {
           params: {
-            now: now,
+            now: `${year}-${month}-${day}`,
           },
         });
-
         setWeatherData(response.data);
+        console.log("날씨 불러와졌음", weatherData);
       } catch (error) {
         console.log(error);
       }
@@ -54,7 +53,7 @@ const Weather = () => {
   return (
     <li className="weatherBox">
       {/* 날씨 데이터 표시 */}
-      {weatherData ? (
+      {weatherData && hourlyWeatherData ? (
         <div className="wetherBox flex row">
           <img
             className="weatherIcon"

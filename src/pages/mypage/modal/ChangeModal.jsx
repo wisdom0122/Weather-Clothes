@@ -1,6 +1,9 @@
-import React from 'react'
+import React, {useState} from 'react'
+import axios from 'axios';
 import styled from 'styled-components';
-export default function changeModal({setOpenChangeModal}) {
+export default function ChangeModal({setOpenChangeModal}) {
+
+  const [password, setPassword] = useState('');
 
   const closeChangeModal =() => {
     setOpenChangeModal(false)
@@ -9,6 +12,30 @@ export default function changeModal({setOpenChangeModal}) {
   const handleInsideClick = (event) => {
     event.stopPropagation();
   };
+
+  // 회원정보 비밀번호 수정
+const handlePWUpdate = () => {
+
+  const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU';
+  const headers = {
+    Cookie: `accessToken=${accessToken}; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None`,
+  };
+
+  const data = {
+    password : password
+  };
+
+  axios.put('/api/members/password', data, { headers })
+    .then(response => {
+      console.log('회원 정보 업데이트 성공:', response.data);
+      // 성공적으로 업데이트된 경우 수행할 작업
+    })
+    .catch(error => {
+      console.error('회원 정보 업데이트 실패:', error);
+      // 업데이트 실패 시 처리할 작업
+    });
+  };
+
 
   return (
     <>
@@ -24,9 +51,9 @@ export default function changeModal({setOpenChangeModal}) {
         <ChangeModalFormContents>
           <div className='changeItem'>
             <span>변경 비밀번호</span>
-            <input/>
+            <input value={password} onChange={e => setPassword(e.target.value)}/>
           </div>
-          <button>변경하기</button>
+          <button onClick={handlePWUpdate}>변경하기</button>
         </ChangeModalFormContents>
       </ChangeModalForm>
     </ChangeModalPage>
@@ -118,4 +145,4 @@ const ChangeModalFormContents = styled.div`
   const CloseButton = styled.button`
   margin: 0 30px 0 225px;
   
-`
+`;
