@@ -9,6 +9,7 @@ import { isLoggedInState } from "../../recoil/atom";
 
 const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
+  const [kakaoParams, setKakaoParams] = useState(null);
 
   const navigate = useNavigate();
 
@@ -37,7 +38,6 @@ const Login = () => {
         });
       }
       setIsLoggedIn(true); // 로그인 상태 업데이트
-
       navigate("/mypage");
     } catch (error) {
       console.error("Login failed:", error.response.data);
@@ -68,9 +68,11 @@ const Login = () => {
   };
 
   // 인가코드 추출
-  const kakaoCode = new URL(window.location.href).searchParams.get("code");
-  console.log(kakaoCode);
-
+  useEffect(() => {
+    setKakaoParams(new URL(window.location.href).searchParams.get("code"));
+    navigate("/mypage");
+  }, [setKakaoParams]);
+  console.log(kakaoParams);
   //----------------------------------------------------
 
   // NAVER 로그인 & env파일에 인증키 숨겨서 사용
