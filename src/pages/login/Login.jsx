@@ -20,22 +20,23 @@ const handlebButtonClick = () => {
 };  
 
 
-  // KAKAO restAPI 사용 로그인 & env파일에 인증키 숨겨서 사용
-  const KAKAO_CLIENT_ID = process.env.REACT_APP_RESTAPI_KAKAO_APP_KEY;
-  const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URL;
-  const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+// KAKAO restAPI 사용 로그인 & env파일에 인증키 숨겨서 사용
+const KAKAO_CLIENT_ID = process.env.REACT_APP_RESTAPI_KAKAO_APP_KEY;
+const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URL;
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 
+
+  
   // 리다이렉션 페이지로이동
   const handleKakaoLogin= () => {
   window.location.href = KAKAO_AUTH_URL;
-}
-
+  }
+    
   // 인가코드 추출
   const kakaoCode = new URL(window.location.href).searchParams.get("code");
-  console.log(kakaoCode)
+  console.log("kakaoCode", kakaoCode);
 
-
-//----------------------------------------------------
+  
 
 // NAVER 로그인 & env파일에 인증키 숨겨서 사용
   const NAVER_CLIENT_ID = process.env.REACT_APP_NAVER_CLIENT_ID;
@@ -45,12 +46,11 @@ const handlebButtonClick = () => {
   // 리다이렉션 페이지로이동
   const handleNaverLogin =()=>{
     window.location.href = NAVER_AUTH_URL;
-   
   }
 
   // 인가코드 추출
   const naverCode = new URL(window.location.href).searchParams.get("code");
-  console.log(naverCode)
+  console.log("naverCode",naverCode)
 
   // 비밀번호 찾기
   useEffect(() => {

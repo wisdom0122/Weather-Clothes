@@ -14,45 +14,11 @@ export default function UpdateModal({ setOpenUpdateModal }) {
   const [regions, setRegions] = useState([]);
   const [gender, setGender] = useState('');
   const [region, setRegion] = useState('');
-  const [errorMessage, setErrorMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
+ 
 
-
-  const handleGenderChange = (e) => {
-    setGender(e.target.value);
-    console.log("gender",gender);
-  };
-
-  const handleRegionChange = (e) => {
-    setRegion(e.target.value);
-    console.log("region",region);
-  };
-
-  // 성별과 지역 입력 상태를 확인하여 에러 메시지를 띄우는 함수
-  const handleUpdate = (e) => {
-    if (!gender && !region) {
-      setErrorMessage('성별과 지역 모두를 입력해주세요!');
-    } else {
-      return;
-    }
-  };  
-
-  /*
-// 기본 fetch 방식을 이용한 REST API 호출
-    useEffect(() => {
-      fetch('/api/regions')
-        .then(response => response.json())
-        .then(data => {
-          setRegions(data);
-        })
-        .catch(error => {
-          // 에러를 처리합니다.
-          console.error(error);
-        });
-    }, []);
-*/
-    
-// axios, async/await 을 사용한 REST API 호출
+// 지역조회
 useEffect(() => {
   const fetchData = async () => {
     try {
@@ -70,6 +36,44 @@ useEffect(() => {
 }, []);
 
 console.log(regions);
+
+
+// 회원정보수정
+const handleUpdate = () => {
+
+  const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU';
+  const headers = {
+    Cookie: `accessToken=${accessToken}; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None`,
+  };
+
+  const data = {
+    region: region,
+    gender: gender,
+  };
+
+  axios.put('/api/members/active-info', data, { headers })
+    .then(response => {
+      console.log('회원 정보 업데이트 성공:', response.data);
+      // 성공적으로 업데이트된 경우 수행할 작업
+    })
+    .catch(error => {
+      console.error('회원 정보 업데이트 실패:', error);
+      // 업데이트 실패 시 처리할 작업
+    });
+
+
+    // 성별과 지역 입력 상태를 확인하여 에러 메시지를 띄우는 함수
+  if (!gender || !region) {
+    setErrorMessage('성별과 지역 모두를 입력해주세요!');
+  } 
+  else {
+    // 업데이트 로직 수행
+  }
+
+};
+
+
+
 
   return (
     <>
@@ -95,14 +99,15 @@ console.log(regions);
           <UpdateModalFormContents>
             <div className="radio">
               <span>성별</span>
-              <input type="radio" name="gender" value="man" checked={gender === 'man'} onChange={handleGenderChange} />
-              <label id="man">남성</label>
-              <input type="radio" name="gender" value="woman" checked={gender === 'woman'} onChange={handleGenderChange} />
-              <label>여성</label>
+              <input type="radio" name="gender" value="MALE" onChange={e => setGender(e.target.value)} />
+              <label id="male">남성</label>
+              <input type="radio" name="gender" value="REMALE"  onChange={e => setGender(e.target.value)} />
+              <label id="female">여성</label>
             </div>
             <div className="selectBox">
               <span>지역</span>
-              <select value={region} onChange={handleRegionChange} >
+              <select value={region}  onChange={e => setRegion(e.target.value)} >
+                <option value="defualtOption" selected>지역선택</option>
                 <option key="강남" value="강남">
                   강남
                 </option>
@@ -155,10 +160,13 @@ const UpdateModalFormContents = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  .selectBox{
+    margin-bottom:38px;
+  }
   button {
     width: 115px;
     height: 50px;
-    margin-top: 40px;
+    margin-top: 10px;
     background: #ffffff;
     border: 2px solid #d9d9d9;
     font-family: "Roboto";
@@ -173,7 +181,7 @@ const UpdateModalFormContents = styled.div`
     color: #000000;
   }
   .warningMessage {
-    margin-top: 15px;
+    margin-bottom: 0px;
     display: flex;
     justify-content: center;
     font-family: "Inter";
@@ -211,7 +219,7 @@ const UpdateModalFormContents = styled.div`
     margin-right: 6px;
   }
 
-  #man {
+  #male {
     margin-right: 40px;
   }
 
