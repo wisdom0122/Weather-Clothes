@@ -241,9 +241,15 @@ const CertifyModalFormContents = styled.div`
     font-weight: 400;
     font-size: 20px;
     color: #ff1c1c;
+<<<<<<< HEAD
     position: absolute;
     left: 945px;
     top: 551px;
+=======
+    position: relative;
+    left: 0%;
+    top: 0%;
+>>>>>>> ca0465835456d4e9106109bc4e8f85200d142c00
   }
 
   input {

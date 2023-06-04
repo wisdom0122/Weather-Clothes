@@ -9,6 +9,7 @@ import { isLoggedInState } from "../../recoil/atom";
 
 const Login = () => {
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
+  const [kakaoParams, setKakaoParams] = useState(null);
 
   const navigate = useNavigate();
 
@@ -37,7 +38,6 @@ const Login = () => {
         });
       }
       setIsLoggedIn(true); // 로그인 상태 업데이트
-
       navigate("/mypage");
     } catch (error) {
       console.error("Login failed:", error.response.data);
