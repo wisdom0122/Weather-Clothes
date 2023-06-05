@@ -7,9 +7,11 @@ import Sche1 from "./Sche1";
 import Sche2 from "./Sche2";
 import { useRecoilValue } from "recoil";
 import { isLoggedInState } from "../../recoil/atom";
+import { useNavigate } from "react-router-dom";
 
 const MainBody = () => {
   const isLoggedIn = useRecoilValue(isLoggedInState);
+  const navigate = useNavigate();
 
   const [clothesData, setClothesData] = useState(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -48,44 +50,50 @@ const MainBody = () => {
   }, []);
 
   const handlePostData = async () => {
-    try {
-      const currentTop = allTops[currentSlideIndex];
-      const currentBottom = allBottoms[currentSlideIndex];
+    {
+      if (isLoggedIn) {
+        try {
+          const currentTop = allTops[currentSlideIndex];
+          const currentBottom = allBottoms[currentSlideIndex];
 
-      // 스케줄 아이디값 로직
-      let scheduleId = null;
-      if (selectedScheduleId === "morning") {
-        scheduleId = clothesData.morning.scheduleDetail?.id || null;
-      } else if (selectedScheduleId === "afternoon") {
-        scheduleId = clothesData.afternoon.scheduleDetail?.id || null;
-      } else if (selectedScheduleId === "evening") {
-        scheduleId = clothesData.evening.scheduleDetail?.id || null;
-      }
-      const response = await axios.post(
-        "/api/clothes/choice",
-        {
-          topId: currentTop.id,
-          bottomId: currentBottom.id,
-          scheduleDetailId: scheduleId,
+          // 스케줄 아이디값 로직
+          let scheduleId = null;
+          if (selectedScheduleId === "morning") {
+            scheduleId = clothesData.morning.scheduleDetail?.id || null;
+          } else if (selectedScheduleId === "afternoon") {
+            scheduleId = clothesData.afternoon.scheduleDetail?.id || null;
+          } else if (selectedScheduleId === "evening") {
+            scheduleId = clothesData.evening.scheduleDetail?.id || null;
+          }
+          const response = await axios.post(
+            "/api/clothes/choice",
+            {
+              topId: currentTop.id,
+              bottomId: currentBottom.id,
+              scheduleDetailId: scheduleId,
 
-          // scheduleDetailId: currentScheduleDetail
-          //   ? currentScheduleDetail.id
-          //   : null, // scheduleDetail이 있는지 확인하고 id 추출
-        },
-        {
-          headers: {
-            Cookie:
-              "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
-          },
+              // scheduleDetailId: currentScheduleDetail
+              //   ? currentScheduleDetail.id
+              //   : null, // scheduleDetail이 있는지 확인하고 id 추출
+            },
+            {
+              headers: {
+                Cookie:
+                  "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+              },
+            }
+          );
+          console.log(response.data); // POST 요청에 대한 응답 처리
+          setSelectClothes(true);
+          setTimeout(() => {
+            setSelectClothes(false);
+          }, 1000);
+        } catch (error) {
+          console.log(error);
         }
-      );
-      console.log(response.data); // POST 요청에 대한 응답 처리
-      setSelectClothes(true);
-      setTimeout(() => {
-        setSelectClothes(false);
-      }, 1000);
-    } catch (error) {
-      console.log(error);
+      } else {
+        navigate("/login");
+      }
     }
   };
 
@@ -107,7 +115,7 @@ const MainBody = () => {
 
   const settings = {
     // 슬릭 슬라이더의 설정을 정의합니다.
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -179,8 +187,7 @@ const MainBody = () => {
               </div>
             </Slider>
           </div>
-
-          <Sche1></Sche1>
+          {!isLoggedIn ? <Sche1></Sche1> : <Sche2></Sche2>}
         </div>
       )}
       <div className="mainBody flex">
@@ -221,6 +228,9 @@ const MainBody = () => {
           text-align: center;
           color: #000000;
           transform: translateX(-93%);
+        }
+        .styleSelect:hover {
+          background: #3f8ded;
         }
         .mainBody {
           margin: 33px 0px;

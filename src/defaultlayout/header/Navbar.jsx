@@ -28,6 +28,7 @@ const Navbar = () => {
     } catch (error) {
       console.error("Logout failed:", error);
       // Handle logout failure
+      setIsLoggedIn(false); // Update login state in Recoil
     }
   };
 
@@ -39,22 +40,45 @@ const Navbar = () => {
         </Link>
       </div>
       <ul className="flex gap-4">
-        <li>
-          <Link
-            to="/bookmark"
-            className="text-gray-600 hover:text-gray-800 transition-colors duration-300 font-bold text-2xl"
-          >
-            옷장
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/mypage"
-            className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-2xl"
-          >
-            마이페이지
-          </Link>
-        </li>
+        {isLoggedIn ? (
+          <li>
+            <Link
+              to="/bookmark"
+              className="text-gray-600 hover:text-gray-800 transition-colors duration-300 font-bold text-2xl"
+            >
+              옷장
+            </Link>
+          </li>
+        ) : (
+          <li>
+            <Link
+              to="/login"
+              className="text-gray-600 hover:text-gray-800 transition-colors duration-300 font-bold text-2xl"
+            >
+              옷장
+            </Link>
+          </li>
+        )}
+        {isLoggedIn ? (
+          <li>
+            <Link
+              to="/mypage"
+              className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-2xl"
+            >
+              마이페이지
+            </Link>
+          </li>
+        ) : (
+          <li>
+            <Link
+              to="/login"
+              className="text-gray-600 hover:text-gray-800 transition-colors duration-300 text-2xl"
+            >
+              마이페이지
+            </Link>
+          </li>
+        )}
+
         {isLoggedIn ? (
           <li>
             <button

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Register.css";
 import logo from "../../assets/images/sample_logo_3.png";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState(""); // 보낼 이메일 저장
   const [password, setPassword] = useState(""); // 비밀번호 저장
   const [passwordConfirm, setPasswordConfirm] = useState(""); // 비밀번호 확인
@@ -83,9 +85,11 @@ const Register = () => {
 
       const response = await axios.post("/api/auth/sign-up", signUpData);
       console.log("회원가입 정보 전송 성공:", response.data);
+      navigate("/login");
       // 필요한 추가 로직 작성
     } catch (error) {
       console.error("회원가입 정보 전송 실패:", error.response.data);
+      alert("회원가입에 실패했습니다.");
       // 필요한 추가 로직 작성
     }
   };

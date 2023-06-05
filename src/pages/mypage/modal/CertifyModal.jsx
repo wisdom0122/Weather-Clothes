@@ -154,7 +154,7 @@ export default function CertifyModal({
                 onClick={checkRequest}
                 disabled={!timerVisible}
               >
-                확  인
+                확 인
               </button>
             </div>
             {wrongPassword && (
@@ -167,15 +167,14 @@ export default function CertifyModal({
             </button>
             {timerVisible && <div className="timer">{timer}</div>}
             <style jsx>{`
-        .disable {
-          background: ${(props) =>
-            props.timerVisible ? "#3f8ded" : "#d9d9d9"};
-        }
-      `}</style>
+              .disable {
+                background: ${(props) =>
+                  props.timerVisible ? "#3f8ded" : "#d9d9d9"};
+              }
+            `}</style>
           </CertifyModalFormContents>
         </CertifyModalForm>
       </CertifyModalPage>
-      
     </>
   );
 }
@@ -241,15 +240,9 @@ const CertifyModalFormContents = styled.div`
     font-weight: 400;
     font-size: 20px;
     color: #ff1c1c;
-<<<<<<< HEAD
     position: absolute;
     left: 945px;
     top: 551px;
-=======
-    position: relative;
-    left: 0%;
-    top: 0%;
->>>>>>> ca0465835456d4e9106109bc4e8f85200d142c00
   }
 
   input {

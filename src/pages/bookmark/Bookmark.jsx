@@ -6,45 +6,90 @@ import "./bookmark.css";
 const Bookmark = () => {
   const [bookMarkMainTitle, setBookMarkMainTitle] = useState("내가 고른 옷");
   const sideTitles = ["내가 고른 옷", "다른 사람의 옷", "좋아요 한 옷"];
+  const [selectClothesData, setSelectClothesData] = useState(null);
+  const [page, setPage] = useState(0); // 페이지 번호 상태
 
   const handleTitleClick = (title) => {
     setBookMarkMainTitle(title);
   };
-  // 선택한 옷
-  const [selectClothesData, setSelectClothesData] = useState(null);
 
   useEffect(() => {
     getMyClothesChoice();
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll); // 스크롤 이벤트 리스너 등록
+    return () => {
+      window.removeEventListener("scroll", handleScroll); // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    };
+  }, []);
+
+  const handleScroll = () => {
+    const scrollTop =
+      (document.documentElement && document.documentElement.scrollTop) ||
+      document.body.scrollTop;
+    const scrollHeight =
+      (document.documentElement && document.documentElement.scrollHeight) ||
+      document.body.scrollHeight;
+    const clientHeight =
+      document.documentElement.clientHeight || window.innerHeight;
+    if (scrollTop + clientHeight >= scrollHeight - 20) {
+      // 스크롤이 페이지 하단에 도달하면 데이터 가져오기
+      loadMoreData();
+    }
+  };
+
   const getMyClothesChoice = async () => {
     try {
       const response = await axios.get("/api/clothes/choice/mine", {
         headers: {
-          Cookie:
-            "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+          Cookie: "accessToken=your-access-token", // 액세스 토큰 값을 설정해야 합니다.
         },
         params: {
           size: 20,
+          page: 0, // 초기 페이지 번호는 0입니다.
         },
       });
 
       const data = response.data;
-      // 받아온 데이터를 처리하고 상태 업데이트 등의 작업 수행
       setSelectClothesData(data);
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  let bookmarkStyle ={
-    height : "750px"
-  }
+  const loadMoreData = async () => {
+    try {
+      const response = await axios.get("/api/clothes/choice/mine", {
+        headers: {
+          Cookie: "accessToken=your-access-token", // 액세스 토큰 값을 설정해야 합니다.
+        },
+        params: {
+          size: 20,
+          page: page + 1, // 다음 페이지 번호로 데이터 요청합니다.
+        },
+      });
 
+      const newData = response.data;
+      setSelectClothesData((prevData) => ({
+        ...prevData,
+        content: [...prevData.content, ...newData.content], // 이전 데이터와 새로운 데이터를 결합합니다.
+      }));
+      setPage((prevPage) => prevPage + 1); // 페이지 번호 업데이트
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  let bookmarkStyle = {
+    height: "750px",
+  };
 
   return (
-    <div className="flex-row flex" style={bookmarkStyle} >
+    <div
+      className="flex-row flex overflow-scroll bookmarkPage"
+      style={bookmarkStyle}
+    >
       <div className="bookMarkSide">
         {sideTitles.map((title) => (
           <BookMarkSide

@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from "react";
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styled from "styled-components";
 
 export default function UpdateModal({ setOpenUpdateModal }) {
@@ -12,68 +12,59 @@ export default function UpdateModal({ setOpenUpdateModal }) {
   };
 
   const [regions, setRegions] = useState([]);
-  const [gender, setGender] = useState('');
-  const [region, setRegion] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [gender, setGender] = useState("");
+  const [region, setRegion] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
- 
+  // 지역조회
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/regions");
+        setRegions(response.data);
+      } catch (error) {
+        // 에러를 처리합니다.
+        console.error(error);
+      }
+    };
 
-// 지역조회
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('/api/regions');
-      setRegions(response.data);
+    // regions를 렌더링하거나 처리하는 부분
+    fetchData();
+  }, []);
 
-    } catch (error) {
-      // 에러를 처리합니다.
-      console.error(error);
-    }
-  };
+  console.log(regions);
 
-// regions를 렌더링하거나 처리하는 부분
-  fetchData();
-}, []);
+  // 회원정보수정
+  const handleUpdate = () => {
+    const accessToken =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU";
+    const headers = {
+      Cookie: `accessToken=${accessToken}; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None`,
+    };
 
-console.log(regions);
+    const data = {
+      region: region,
+      gender: gender,
+    };
 
-
-// 회원정보수정
-const handleUpdate = () => {
-
-  const accessToken = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU';
-  const headers = {
-    Cookie: `accessToken=${accessToken}; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None`,
-  };
-
-  const data = {
-    region: region,
-    gender: gender,
-  };
-
-  axios.put('/api/members/active-info', data, { headers })
-    .then(response => {
-      console.log('회원 정보 업데이트 성공:', response.data);
-      // 성공적으로 업데이트된 경우 수행할 작업
-    })
-    .catch(error => {
-      console.error('회원 정보 업데이트 실패:', error);
-      // 업데이트 실패 시 처리할 작업
-    });
-
+    axios
+      .put("/api/members/active-info", data, { headers })
+      .then((response) => {
+        console.log("회원 정보 업데이트 성공:", response.data);
+        // 성공적으로 업데이트된 경우 수행할 작업
+      })
+      .catch((error) => {
+        console.error("회원 정보 업데이트 실패:", error);
+        // 업데이트 실패 시 처리할 작업
+      });
 
     // 성별과 지역 입력 상태를 확인하여 에러 메시지를 띄우는 함수
-  if (!gender || !region) {
-    setErrorMessage('성별과 지역 모두를 입력해주세요!');
-  } 
-  else {
-    // 업데이트 로직 수행
-  }
-
-};
-
-
-
+    if (!gender || !region) {
+      setErrorMessage("성별과 지역 모두를 입력해주세요!");
+    } else {
+      // 업데이트 로직 수행
+    }
+  };
 
   return (
     <>
@@ -99,25 +90,56 @@ const handleUpdate = () => {
           <UpdateModalFormContents>
             <div className="radio">
               <span>성별</span>
-              <input type="radio" name="gender" value="MALE" onChange={e => setGender(e.target.value)} />
+              <input
+                type="radio"
+                name="gender"
+                value="MALE"
+                onChange={(e) => setGender(e.target.value)}
+              />
               <label id="male">남성</label>
-              <input type="radio" name="gender" value="REMALE"  onChange={e => setGender(e.target.value)} />
+              <input
+                type="radio"
+                name="gender"
+                value="REMALE"
+                onChange={(e) => setGender(e.target.value)}
+              />
               <label id="female">여성</label>
             </div>
             <div className="selectBox">
               <span>지역</span>
-              <select value={region}  onChange={e => setRegion(e.target.value)} >
-                <option value="defualtOption" selected>지역선택</option>
-                <option key="강남" value="강남">
-                  강남
-                </option>
-                <option key="서초" value="서초">
-                  서초
-                </option>
-              </select>
+              {regions.length > 0 ? (
+                <select
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value)}
+                >
+                  <option value="" disabled>
+                    지역선택
+                  </option>
+                  {regions.map((item) => (
+                    <option key={item.regionId} value={item.regionName}>
+                      {item.regionName}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <select
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value)}
+                >
+                  <option value="defualtOption" selected>
+                    지역선택
+                  </option>
+                  <option key="강남" value="강남">
+                    강남
+                  </option>
+                  <option key="서초" value="서초">
+                    서초
+                  </option>
+                </select>
+              )}
             </div>
             {errorMessage && <p className="warningMessage">{errorMessage}</p>}
-            <button onClick={handleUpdate} >업데이트</button>
+            <button onClick={handleUpdate}>업데이트</button>
           </UpdateModalFormContents>
         </UpdateModalForm>
       </UpdateModalPage>
@@ -160,8 +182,8 @@ const UpdateModalFormContents = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  .selectBox{
-    margin-bottom:38px;
+  .selectBox {
+    margin-bottom: 38px;
   }
   button {
     width: 115px;

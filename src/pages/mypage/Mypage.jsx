@@ -10,6 +10,7 @@ const Mypage = () => {
   const [openCertifyModal, setOpenCertifyModal] = useState(false);
   const [openChangeModal, setOpenChangeModal] = useState(false);
   const [myphoneNumber, setMyphoneNumber] = useState("");
+  const [memberProfileData, setMemberProfiledata] = useState("");
 
   // axios, async/await 을 사용한 REST API 호출
   useEffect(() => {
@@ -26,8 +27,7 @@ const Mypage = () => {
         const memberProfile = response.data;
         // 회원정보를 사용하는 로직
         console.log("memberProfile", memberProfile);
-
-        return memberProfile; // 회원정보를 반환
+        setMemberProfiledata(response.data);
       } catch (error) {
         // 요청이 실패한 경우에 대한 처리
         console.error("회원정보 조회 실패:", error);
@@ -156,7 +156,9 @@ const Mypage = () => {
             </svg>
           </div>
           <div className="profileBoxText">
-            <div className="name">***님 반갑습니다</div>
+            <div className="name">
+              {memberProfileData ? memberProfileData.name : "***"}님 반갑습니다
+            </div>
             <p className="profileBoxTextContents">
               성별과 지역을 입력하시면 맞춤 AI 추천 서비스를 받으실 수 있습니다
             </p>
