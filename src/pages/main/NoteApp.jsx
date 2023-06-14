@@ -125,12 +125,13 @@ const NoteApp = ({ postdate, setSelectedScheduleId }) => {
           regionName: morningLocate || afternoonLocate || eveningLocate,
         };
 
-        const response = await axios.post("/api/schedules", scheduleData, {
-          headers: {
-            Cookie:
-              "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
-          },
-        });
+        const response = await axios.post(
+          "https://todayclothes.site/api/schedules",
+          scheduleData,
+          {
+            withCredentials: true, // 쿠키 자동 처리 옵션
+          }
+        );
         console.log("POST 요청 성공:", response);
       }
     } catch (error) {
@@ -140,12 +141,12 @@ const NoteApp = ({ postdate, setSelectedScheduleId }) => {
 
   const deleteSchedule = async (id) => {
     try {
-      const response = await axios.delete(`/api/schedules/${id}`, {
-        headers: {
-          Cookie:
-            "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
-        },
-      });
+      const response = await axios.delete(
+        `https://todayclothes.site/api/schedules/${id}`,
+        {
+          withCredentials: true, // 쿠키 자동 처리 옵션
+        }
+      );
       console.log("Schedule deleted:", response.data);
     } catch (error) {
       console.error("Error deleting schedule:", error);

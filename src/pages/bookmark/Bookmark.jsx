@@ -41,15 +41,20 @@ const Bookmark = () => {
 
   const getMyClothesChoice = async () => {
     try {
-      const response = await axios.get("/api/clothes/choice/mine", {
-        headers: {
-          Cookie: "accessToken=your-access-token", // 액세스 토큰 값을 설정해야 합니다.
-        },
-        params: {
-          size: 20,
-          page: 0, // 초기 페이지 번호는 0입니다.
-        },
-      });
+      const response = await axios.get(
+        "https://todayclothes.site/api/clothes/choice/mine",
+        {
+          headers: {
+            Cookie:
+              "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjg2NTYxMDQzLCJleHAiOjE2ODY2NDc0NDN9.Ps_yd2xlDswJGRaN8gWsfx1OeHSZgAdxYkBelrehRHs; Path=/; Max-Age=604800; Expires=Mon, 19 Jun 2023 09:10:43 GMT; Secure; HttpOnly; SameSite=None",
+            // 액세스 토큰 값을 설정해야 합니다.
+          },
+          params: {
+            size: 20,
+            page: 0, // 초기 페이지 번호는 0입니다.
+          },
+        }
+      );
 
       const data = response.data;
       setSelectClothesData(data);
@@ -60,15 +65,20 @@ const Bookmark = () => {
 
   const loadMoreData = async () => {
     try {
-      const response = await axios.get("/api/clothes/choice/mine", {
-        headers: {
-          Cookie: "accessToken=your-access-token", // 액세스 토큰 값을 설정해야 합니다.
-        },
-        params: {
-          size: 20,
-          page: page + 1, // 다음 페이지 번호로 데이터 요청합니다.
-        },
-      });
+      const response = await axios.get(
+        "https://todayclothes.site/api/clothes/choice/mine",
+        {
+          headers: {
+            Cookie:
+              "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjg2NTYxMDQzLCJleHAiOjE2ODY2NDc0NDN9.Ps_yd2xlDswJGRaN8gWsfx1OeHSZgAdxYkBelrehRHs; Path=/; Max-Age=604800; Expires=Mon, 19 Jun 2023 09:10:43 GMT; Secure; HttpOnly; SameSite=None",
+            // 액세스 토큰 값을 설정해야 합니다.
+          },
+          params: {
+            size: 20,
+            page: page + 1, // 다음 페이지 번호로 데이터 요청합니다.
+          },
+        }
+      );
 
       const newData = response.data;
       setSelectClothesData((prevData) => ({

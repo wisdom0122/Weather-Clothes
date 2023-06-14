@@ -15,10 +15,10 @@ const Mypage = () => {
   // axios, async/await 을 사용한 REST API 호출
   useEffect(() => {
     const fetchMemberProfile = async () => {
-      const url = "/api/members/profile";
+      const url = "https://todayclothes.site/api/members/profile";
       const headers = {
         Cookie:
-          "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+          "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjg2NTYxMDQzLCJleHAiOjE2ODY2NDc0NDN9.Ps_yd2xlDswJGRaN8gWsfx1OeHSZgAdxYkBelrehRHs; Path=/; Max-Age=604800; Expires=Mon, 19 Jun 2023 09:10:43 GMT; Secure; HttpOnly; SameSite=None",
       };
 
       try {
@@ -28,6 +28,7 @@ const Mypage = () => {
         // 회원정보를 사용하는 로직
         console.log("memberProfile", memberProfile);
         setMemberProfiledata(response.data);
+        console.log(memberProfile);
       } catch (error) {
         // 요청이 실패한 경우에 대한 처리
         console.error("회원정보 조회 실패:", error);

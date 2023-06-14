@@ -17,7 +17,7 @@ const Register = () => {
   const [timer, setTimer] = useState(300); // 초 단위로 5분(300초) 설정
   const [isTimerStarted, setIsTimerStarted] = useState(false); // 타이머 시작 여부 상태
   const [isAuthCodeChecked, setIsAuthCodeChecked] = useState(false); // 인증 번호 확인
-  const [allowSign, setAllowSign] = useState(false); // 인증 번호 확인
+  const [allowSign, setAllowSign] = useState(false); // 가입 승인
 
   //이메일 저장 함수
   const handleEmailChange = (e) => {
@@ -43,16 +43,23 @@ const Register = () => {
   // 인증 POST 요청을 위해 axios를 사용
   const handleVerificationCodeRequest = async () => {
     try {
-      const response = await axios.post("/api/auth/email/auth-key", {
-        email: email,
-      });
+      const response = await axios.post(
+        "https://todayclothes.site/api/auth/email/auth-key",
+        {
+          email: email,
+        }
+      );
       console.log("인증번호 보낸 이메일:", email);
       console.log("인증번호 요청 성공:", response.data);
       setIsTimerStarted(true); // 인증번호 요청 성공 시 타이머 시작
       // 필요한 추가 로직 작성
     } catch (error) {
       console.error("인증번호 요청 실패:", error.response.data);
-
+      if (error.response.data.errorCode === "ALREADY_EXISTS_EMAIL") {
+        alert("이미 가입된 이메일 주소입니다.");
+      } else {
+        alert("인증번호 요청에 실패했습니다.");
+      }
       // 필요한 추가 로직 작성
     }
   };
@@ -60,14 +67,19 @@ const Register = () => {
   // 인증 확인 POST
   const handleAuthCodeCheck = async () => {
     try {
-      const response = await axios.post("/api/auth/email/auth-key/check", {
-        email: email,
-        authKey: authKey,
-      });
+      const response = await axios.post(
+        "https://todayclothes.site/api/auth/email/auth-key/check",
+        {
+          email: email,
+          authKey: authKey,
+        }
+      );
       console.log("인증코드 확인 성공:", response.data);
       // 인증 확인 값 저장 (true or false가 저장되어있음)
       setIsAuthCodeChecked(response.data.result);
       // 필요한 추가 로직 작성
+      alert("이메일 인증 성공");
+      setIsTimerStarted(false);
     } catch (error) {
       console.error("인증코드 확인 실패:", error.response.data);
       // 필요한 추가 로직 작성
@@ -83,7 +95,10 @@ const Register = () => {
         emailAuthResult: isAuthCodeChecked,
       };
 
-      const response = await axios.post("/api/auth/sign-up", signUpData);
+      const response = await axios.post(
+        "https://todayclothes.site/api/auth/sign-up",
+        signUpData
+      );
       console.log("회원가입 정보 전송 성공:", response.data);
       navigate("/login");
       // 필요한 추가 로직 작성
@@ -94,17 +109,6 @@ const Register = () => {
     }
   };
   // 회원가입 유효성 최종
-  const handleClickSignIn = async () => {
-    if (
-      isAuthCodeChecked &&
-      isPasswordMatched &&
-      password.length > 1 &&
-      name > 1
-    ) {
-      setAllowSign(true);
-      await handleSignUp();
-    }
-  };
 
   // 타이머 값을 '분:초' 형식으로 변환하는 함수
   const formatTimer = (timer) => {
@@ -134,6 +138,19 @@ const Register = () => {
     };
   }, [isTimerStarted, timer]);
 
+  useEffect(() => {
+    if (
+      isAuthCodeChecked &&
+      isPasswordMatched &&
+      password.length > 1 &&
+      name.length > 1
+    ) {
+      setAllowSign(true);
+    } else {
+      setAllowSign(false);
+    }
+  }, [isAuthCodeChecked, isPasswordMatched, password, name]);
+
   return (
     <div className="registerForm">
       <img src={logo} className="sampleLogo" alt="로고" />
@@ -151,19 +168,21 @@ const Register = () => {
       />
       <p id="pwTitle">비밀번호</p>
       <input
+        type="password"
         className="registerInput"
         placeholder="비밀번호"
         value={password}
         onChange={handlePasswordChange}
       />
       <input
+        type="password"
         className="registerInput"
         placeholder="비밀번호 확인"
         id="registerInput-bottom"
         value={passwordConfirm}
         onChange={handlePasswordConfirmChange}
       />
-      {!isPasswordMatched ? (
+      {!isPasswordMatched && passwordConfirm.length > 0 ? (
         <p id="disagreeText">비밀번호가 일치하지 않습니다.</p>
       ) : (
         <p id="correct"></p>
@@ -175,8 +194,8 @@ const Register = () => {
         onChange={handleNameChange}
       />
       <button
-        className={allowSign ? "registerButton" : "registerButton signAllow"}
-        onClick={handleClickSignIn}
+        className={allowSign ? "registerButton signAllow" : "registerButton"}
+        onClick={handleSignUp}
         disabled={allowSign}
       >
         가입하기
@@ -197,7 +216,7 @@ const Register = () => {
       >
         확 인
       </button>
-      <span className="timer">{formatTimer(timer)}</span>
+      <span className="timer">{isTimerStarted && formatTimer(timer)}</span>
     </div>
   );
 };

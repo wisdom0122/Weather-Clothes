@@ -5,25 +5,24 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/images/sample_logo_3.png";
 import { isLoggedInState } from "../../recoil/atom";
 import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState);
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "/api/auth/sign-out",
-        {},
-        {
-          headers: {
-            Cookie:
-              "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
-          },
-        }
-      );
+      const accessToken = localStorage.getItem("accessToken");
 
+      await axios.post("https://todayclothes.site/api/auth/sign-out", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      navigate("/");
       setIsLoggedIn(false); // Update login state in Recoil
-
+      localStorage.setItem("isLoggedIn", "false");
       // Perform any additional logout actions (e.g., clearing local storage, redirecting, etc.)
     } catch (error) {
       console.error("Logout failed:", error);

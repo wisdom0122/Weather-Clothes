@@ -10,6 +10,32 @@ import { isLoggedInState } from "../../recoil/atom";
 import { useNavigate } from "react-router-dom";
 
 const MainBody = () => {
+  const [memberProfileData, setMemberProfiledata] = useState("");
+
+  useEffect(() => {
+    const fetchMemberProfile = async () => {
+      const url = "https://todayclothes.site/api/members/profile";
+      const headers = {
+        Cookie:
+          "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+      };
+
+      try {
+        const response = await axios.get(url, { headers });
+        // 성공적으로 회원정보를 조회한 경우에 대한 처리
+        const memberProfile = response.data;
+        // 회원정보를 사용하는 로직
+        console.log("memberProfile", memberProfile);
+        setMemberProfiledata(response.data);
+        console.log(memberProfile);
+      } catch (error) {
+        // 요청이 실패한 경우에 대한 처리
+        console.error("회원정보 조회 실패:", error);
+      }
+    };
+    fetchMemberProfile();
+  }, []);
+
   const isLoggedIn = useRecoilValue(isLoggedInState);
   const navigate = useNavigate();
 
@@ -18,6 +44,7 @@ const MainBody = () => {
   const [selectedScheduleId, setSelectedScheduleId] = useState(null);
   const [selectClothes, setSelectClothes] = useState(false);
 
+  const [scheduleId, setScheduleId] = useState(null);
   useEffect(() => {
     const getCurrentDate = () => {
       const now = new Date();
@@ -31,15 +58,18 @@ const MainBody = () => {
       try {
         const currentDate = getCurrentDate();
 
-        const response = await axios.get("/api/clothes/recommend", {
-          params: {
-            date: currentDate,
-          },
-          headers: {
-            Cookie:
-              "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
-          },
-        });
+        const response = await axios.get(
+          "https://todayclothes.site/api/clothes/recommend",
+          {
+            params: {
+              date: currentDate,
+            },
+            headers: {
+              Cookie:
+                "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+            },
+          }
+        );
         setClothesData(response.data);
       } catch (error) {
         console.log(error);
@@ -48,7 +78,7 @@ const MainBody = () => {
 
     getClothesRecommendation();
   }, []);
-
+  console.log(clothesData);
   const handlePostData = async () => {
     {
       if (isLoggedIn) {
@@ -57,16 +87,16 @@ const MainBody = () => {
           const currentBottom = allBottoms[currentSlideIndex];
 
           // 스케줄 아이디값 로직
-          let scheduleId = null;
           if (selectedScheduleId === "morning") {
-            scheduleId = clothesData.morning.scheduleDetail?.id || null;
+            setScheduleId(clothesData.morning.scheduleDetail?.id || null);
           } else if (selectedScheduleId === "afternoon") {
-            scheduleId = clothesData.afternoon.scheduleDetail?.id || null;
+            setScheduleId(clothesData.afternoon.scheduleDetail?.id || null);
           } else if (selectedScheduleId === "evening") {
-            scheduleId = clothesData.evening.scheduleDetail?.id || null;
+            setScheduleId(clothesData.evening.scheduleDetail?.id || null);
           }
+          console.log(scheduleId);
           const response = await axios.post(
-            "/api/clothes/choice",
+            "https://todayclothes.site/api/clothes/choice",
             {
               topId: currentTop.id,
               bottomId: currentBottom.id,
@@ -76,12 +106,16 @@ const MainBody = () => {
               //   ? currentScheduleDetail.id
               //   : null, // scheduleDetail이 있는지 확인하고 id 추출
             },
+            // -----------------------------------------------------------------------------------
             {
-              headers: {
-                Cookie:
-                  "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
-              },
+              withCredentials: true, // 쿠키 자동 처리 옵션
             }
+            // {
+            //   headers: {
+            //     Cookie:
+            //       "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None",
+            //   },
+            // }
           );
           console.log(response.data); // POST 요청에 대한 응답 처리
           setSelectClothes(true);
@@ -121,7 +155,6 @@ const MainBody = () => {
     slidesToScroll: 1,
     arrows: true,
   };
-
   return (
     <div>
       {clothesData && (
@@ -154,7 +187,14 @@ const MainBody = () => {
               ))}
             </Slider>
           </div>
-          {!isLoggedIn ? <Sche1></Sche1> : <Sche2></Sche2>}
+          {!isLoggedIn ? (
+            <Sche1 />
+          ) : memberProfileData.gender !== null &&
+            memberProfileData.region !== null ? (
+            <Sche2 setSelectedScheduleId={setSelectedScheduleId} />
+          ) : (
+            <Sche1 />
+          )}
         </div>
       )}
       {!clothesData && (
@@ -187,7 +227,11 @@ const MainBody = () => {
               </div>
             </Slider>
           </div>
-          {!isLoggedIn ? <Sche1></Sche1> : <Sche2></Sche2>}
+          {!isLoggedIn ? (
+            <Sche1></Sche1>
+          ) : (
+            <Sche2 setSelectedScheduleId={setSelectedScheduleId} />
+          )}
         </div>
       )}
       <div className="mainBody flex">

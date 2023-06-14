@@ -13,14 +13,16 @@ export default function UpdateModal({ setOpenUpdateModal }) {
 
   const [regions, setRegions] = useState([]);
   const [gender, setGender] = useState("");
-  const [region, setRegion] = useState("");
+  const [regionId, setRegionId] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   // 지역조회
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/regions");
+        const response = await axios.get(
+          "https://todayclothes.site/api/regions"
+        );
         setRegions(response.data);
       } catch (error) {
         // 에러를 처리합니다.
@@ -32,40 +34,72 @@ export default function UpdateModal({ setOpenUpdateModal }) {
     fetchData();
   }, []);
 
-  console.log(regions);
+  console.log(regionId);
+  console.log(gender);
 
   // 회원정보수정
-  const handleUpdate = () => {
-    const accessToken =
-      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjgzMzY4MTE0LCJleHAiOjE2ODMzNjk5MTR9.Q2F7ss4hxL6O7ZXTSRB5M27zWBJG_rNJbUfvXoTmyhU";
-    const headers = {
-      Cookie: `accessToken=${accessToken}; Path=/; Max-Age=604800; Expires=Sat, 13 May 2023 10:15:14 GMT; Secure; HttpOnly; SameSite=None`,
-    };
+  const api = axios.create({
+    baseURL: "https://todayclothes.site/api",
+  });
 
-    const data = {
-      region: region,
-      gender: gender,
-    };
+  // 요청 인터셉터 추가
+  api.interceptors.request.use((config) => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  });
 
-    axios
-      .put("/api/members/active-info", data, { headers })
-      .then((response) => {
-        console.log("회원 정보 업데이트 성공:", response.data);
-        // 성공적으로 업데이트된 경우 수행할 작업
-      })
-      .catch((error) => {
-        console.error("회원 정보 업데이트 실패:", error);
-        // 업데이트 실패 시 처리할 작업
-      });
+  // 회원 정보 업데이트 핸들러
+  const handleUpdate = async () => {
+    try {
+      const updateData = {
+        gender: gender,
+        regionId: regionId,
+      };
 
-    // 성별과 지역 입력 상태를 확인하여 에러 메시지를 띄우는 함수
-    if (!gender || !region) {
-      setErrorMessage("성별과 지역 모두를 입력해주세요!");
-    } else {
-      // 업데이트 로직 수행
+      const response = await axios.put(
+        "https://todayclothes.site/api/members/active-info",
+        updateData,
+        {
+          withCredentials: true, // 쿠키 자동 전송 설정
+        }
+      );
+
+      console.log("회원 정보 업데이트 성공:", response);
+    } catch (error) {
+      console.error("회원 정보 업데이트 실패:", error);
+      setErrorMessage("회원 정보 업데이트에 실패했습니다.");
     }
   };
 
+  // const handleUpdate = async () => {
+  //   try {
+  //     const updateData = {
+  //       gender: gender,
+  //       regionId: regionId,
+  //     };
+
+  //     const headers = {
+  //       Cookie:
+  //         "accessToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2IiwiaWF0IjoxNjg2NjcxNDUzLCJleHAiOjE2ODY3NTc4NTN9.y0Ze-QMvp38VI4C1hKU-NqhBzipQC8ctv__XInW6pMI; Path=/; Max-Age=604800; Expires=Tue, 20 Jun 2023 15:50:53 GMT; Secure; HttpOnly; SameSite=None",
+  //     };
+
+  //     const response = await axios.put(
+  //       "https://todayclothes.site/api/members/active-info",
+  //       updateData,
+  //       {
+  //         headers: headers,
+  //       }
+  //     );
+
+  //     console.log("회원 정보 업데이트 성공:", response);
+  //   } catch (error) {
+  //     console.error("회원 정보 업데이트 실패:", error);
+  //     setErrorMessage("회원 정보 업데이트에 실패했습니다.");
+  //   }
+  // };
   return (
     <>
       <UpdateModalPage onClick={closeUpdateModal}>
@@ -109,22 +143,25 @@ export default function UpdateModal({ setOpenUpdateModal }) {
               <span>지역</span>
               {regions.length > 0 ? (
                 <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
+                  value={regionId}
+                  onChange={(e) => setRegionId(e.target.value)}
                 >
                   <option value="" disabled>
                     지역선택
                   </option>
                   {regions.map((item) => (
-                    <option key={item.regionId} value={item.regionName}>
+                    <option
+                      key={item.regionId}
+                      value={item.regionId} // 여기에 수정
+                    >
                       {item.regionName}
                     </option>
                   ))}
                 </select>
               ) : (
                 <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
+                  value={regionId}
+                  onChange={(e) => setRegionId(e.target.value)}
                 >
                   <option value="defualtOption" selected>
                     지역선택

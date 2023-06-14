@@ -13,11 +13,14 @@ const Weather = () => {
         const month = String(now.getMonth() + 1).padStart(2, "0");
         const day = String(now.getDate()).padStart(2, "0");
 
-        const response = await axios.get("/api/weather/daliy", {
-          params: {
-            now: `${year}-${month}-${day}`,
-          },
-        });
+        const response = await axios.get(
+          "https://todayclothes.site/api/weather/daily",
+          {
+            params: {
+              now: `${year}-${month}-${day}`,
+            },
+          }
+        );
         setWeatherData(response.data);
         console.log("날씨 불러와졌음", weatherData);
       } catch (error) {
@@ -37,11 +40,14 @@ const Weather = () => {
         const day = String(now.getDate()).padStart(2, "0");
         const hour = String(now.getHours()).padStart(2, "0");
 
-        const response = await axios.get("/api/weather/hourly", {
-          params: {
-            now: `${year}-${month}-${day}-${hour}`,
-          },
-        });
+        const response = await axios.get(
+          "https://todayclothes.site/api/weather/hourly",
+          {
+            params: {
+              now: `${year}-${month}-${day}-${hour}`,
+            },
+          }
+        );
         setHourlyWeatherData(response.data);
       } catch (error) {
         console.log(error);
@@ -62,7 +68,7 @@ const Weather = () => {
           />
           <p className="currentTem">{hourlyWeatherData.temp}°</p>
           <p className="currentTem">{hourlyWeatherData.description}</p>
-          <p className="lowTem">{weatherData.highestTemp}°</p> /{" "}
+          <p className="lowTem">{weatherData.highestTemp}°</p> <p>/</p>
           <p className="highTem">{weatherData.lowestTemp}°</p>
           {/* 추가적인 날씨 정보 표시 */}
         </div>

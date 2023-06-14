@@ -57,7 +57,7 @@ export default function CertifyModal({
   };
 
   const sendAuthRequest = async () => {
-    const url = "/api/members/phone/auth-num";
+    const url = "https://todayclothes.site/api/members/phone/auth-num";
 
     try {
       const response = await axios.post(
@@ -82,7 +82,7 @@ export default function CertifyModal({
 
   // 인증번호 확인
   const checkRequest = async () => {
-    const url = "/api/members/phone/auth-num/check";
+    const url = "https://todayclothes.site/api/members/phone/auth-num/check";
 
     try {
       const response = await axios.post(
